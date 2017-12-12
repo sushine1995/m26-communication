@@ -1,0 +1,508 @@
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE SEARCH
+OBJECT MODULE PLACED IN .\Objects\search.obj
+COMPILER INVOKED BY: d:\Keil_v5\C51\BIN\C51.EXE search.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\se
+                    -arch.lst) TABS(2) OBJECT(.\Objects\search.obj)
+
+line level    source
+
+   1           ////////////////////
+   2           //2»À¥Ú
+   3           /////
+   4            void search_point1314_2(uchar pai1,uchar pai2,uchar mark)
+*** ERROR C141 IN LINE 4 OF search.c: syntax error near 'pai1', expected ')'
+   5           {
+   6   1        uchar i,j,k,f,n,m2,m3,repeat;
+*** ERROR C141 IN LINE 6 OF search.c: syntax error near 'i'
+*** ERROR C202 IN LINE 6 OF search.c: 'i': undefined identifier
+   7   1         uint li;
+*** ERROR C202 IN LINE 7 OF search.c: 'uint': undefined identifier
+*** ERROR C141 IN LINE 7 OF search.c: syntax error near 'li'
+   8   1        point=0; FangWei=0;
+*** ERROR C202 IN LINE 8 OF search.c: 'point': undefined identifier
+*** ERROR C202 IN LINE 8 OF search.c: 'FangWei': undefined identifier
+   9   1        for (i=0;i<5;i++)
+*** ERROR C202 IN LINE 9 OF search.c: 'i': undefined identifier
+  10   1         {for (j=0;j++;j<20)  ZhuangPAI[i][j]=0;}
+*** ERROR C202 IN LINE 10 OF search.c: 'j': undefined identifier
+*** ERROR C202 IN LINE 10 OF search.c: 'i': undefined identifier
+  11   1      
+  12   1        for (li=(PaiTotal-1);li<=(PaiTotal*2-1);li++)   //PaiTotal◊‹ ˝£¨÷–º‰’‚∏±’“
+*** ERROR C202 IN LINE 12 OF search.c: 'li': undefined identifier
+  13   1        {
+  14   2          if (pai1==TABLE[li]) {point=li;break;}   //œ»’“µΩµ⁄“ª’≈≈∆À˘‘⁄µƒŒª÷√
+*** ERROR C202 IN LINE 14 OF search.c: 'pai1': undefined identifier
+*** ERROR C202 IN LINE 14 OF search.c: 'point': undefined identifier
+  15   2        }
+  16   1        
+  17   1       if (XianNum==16)
+*** ERROR C202 IN LINE 17 OF search.c: 'XianNum': undefined identifier
+  18   1         {
+  19   2           if ((pai2==TABLE[point+Person*4])||(pai2==TABLE[point-Person*4]))
+*** ERROR C202 IN LINE 19 OF search.c: 'pai2': undefined identifier
+  20   2             if (pai2==TABLE[point-Person*4]) point=point+1;  //≈∆‘⁄«∞√Ê÷∏’Î∫Û“∆ TABLE¿Ô√Êµƒ±‡∫≈ «∞¥’’…œœ¬…œœ¬±‡∫≈µ
+             -›‘ˆ
+*** ERROR C202 IN LINE 20 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 20 OF search.c: 'point': undefined identifier
+  21   2                else point=point+Person*4+1;  //÷∏œÚ∆‰À˚œ–º““™◊•µƒ≈∆ 
+*** ERROR C202 IN LINE 21 OF search.c: 'point': undefined identifier
+  22   2           FangWei=1;   //∑ΩŒª=1£¨±Ì æ◊Øº“
+*** ERROR C202 IN LINE 22 OF search.c: 'FangWei': undefined identifier
+  23   2              //◊Ó∫Û“ª’≈≈∆œ»∑≈∫√
+  24   2               //◊Øº“µƒ     
+  25   2           ZhuangPAI[1][17]=TABLE[point-1];    
+*** ERROR C202 IN LINE 25 OF search.c: 'ZhuangPAI': undefined identifier
+  26   2         }
+  27   1       else //13,14’≈
+  28   1        {    
+  29   2        ///////////////Õ®π˝mark’“µΩ◊Ó∫Û◊•◊ﬂ≈∆µƒpoint 
+  30   2        if (mark==0)  //∏ÙÃ¯
+*** ERROR C202 IN LINE 30 OF search.c: 'mark': undefined identifier
+  31   2           {
+  32   3            if ((pai2==TABLE[point+4])||(pai2==TABLE[point-4])) //∏ÙÃ¯£¨µ⁄“ª’≈‘⁄pointŒª÷√£¨
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 2   
+
+*** ERROR C202 IN LINE 32 OF search.c: 'pai2': undefined identifier
+  33   3             {                          //ƒ«√¥¡ÌÕ‚“ª’≈“ª∂®‘⁄’‚¡Ω∏ˆŒª÷√æÕ «◊Øº“
+  34   4               if (pai2==TABLE[point-4]) point=point-2;  //≈∆‘⁄«∞√Ê÷∏’Î∫Û“∆ TABLE¿Ô√Êµƒ±‡∫≈ «∞¥’’…œœ¬…œœ¬±‡∫≈µ›‘ˆ
+*** ERROR C202 IN LINE 34 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 34 OF search.c: 'point': undefined identifier
+  35   4                else point=point+2; //÷∏œÚ◊Ó–¬µƒ≈∆ 
+*** ERROR C202 IN LINE 35 OF search.c: 'point': undefined identifier
+  36   4      
+  37   4                FangWei=1;   //∑ΩŒª=1£¨±Ì æ◊Øº“
+*** ERROR C202 IN LINE 37 OF search.c: 'FangWei': undefined identifier
+  38   4                     
+  39   4            }
+  40   3            else //œ–º““™«Ûµ⁄“ª’≈∫Õ◊Ó∫Û“ª’≈¿¥∏–”¶ ,œ–º“◊Ó∫Û÷ª◊•“ª’≈£¨À˘“‘≤ªƒ‹≤…”√£¨◊Ó∫Û◊•µƒ¡Ω’≈¿¥∏–”¶
+  41   3            {
+  42   4             if (DunNum==4)  //√ø¥Œ4’≈
+*** ERROR C202 IN LINE 42 OF search.c: 'DunNum': undefined identifier
+  43   4              {
+  44   5              if ((pai2==TABLE[point-((XianNum-1)*Person+2-5)])||(pai2==TABLE[point+((XianNum-1)*Person+2-5)])) //µ
+             -⁄∂˛’≈((XianNum-1)*4+2-5)
+*** ERROR C202 IN LINE 44 OF search.c: 'pai2': undefined identifier
+  45   5                   {
+  46   6                   FangWei=2;   //∏˘æ›µ⁄∂˛’≈‘⁄pai1µƒ«∞√Ê£¨±Ì æpai1 «◊Ó∫Û◊•µƒ£¨÷∏’Î∂®Œª+4
+*** ERROR C202 IN LINE 46 OF search.c: 'FangWei': undefined identifier
+  47   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-5)])  {point=point+1;}  ////◊Ó∫Û“ª’≈≈∆œ»∑≈∫√,÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 47 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 47 OF search.c: 'point': undefined identifier
+  48   6                  else point=point+((XianNum-1)*Person+2-5)+1;  //+49
+*** ERROR C202 IN LINE 48 OF search.c: 'point': undefined identifier
+  49   6                   } 
+  50   5               
+  51   5              }
+  52   4            else if (DunNum==2)  //√ø¥Œ2’≈
+*** ERROR C202 IN LINE 52 OF search.c: 'DunNum': undefined identifier
+  53   4            {
+  54   5              if ((pai2==TABLE[point-((XianNum-1)*Person+2-3)])||(pai2==TABLE[point+((XianNum-1)*Person+2-3)])) //µ⁄
+             -∂˛’≈((XianNum-1)*4+2-5)
+*** ERROR C202 IN LINE 54 OF search.c: 'pai2': undefined identifier
+  55   5                   {
+  56   6                   FangWei=2;   //∏˘æ›µ⁄∂˛’≈‘⁄pai1µƒ«∞√Ê£¨±Ì æpai1 «◊Ó∫Û◊•µƒ£¨÷∏’Î∂®Œª+4
+*** ERROR C202 IN LINE 56 OF search.c: 'FangWei': undefined identifier
+  57   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-3)])  {point=point+1;}  ////◊Ó∫Û“ª’≈≈∆œ»∑≈∫√,÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 57 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 57 OF search.c: 'point': undefined identifier
+  58   6                  else point=point+((XianNum-1)*Person+2-3)+1;  //+49
+*** ERROR C202 IN LINE 58 OF search.c: 'point': undefined identifier
+  59   6                   } 
+  60   5               
+  61   5               
+  62   5            }
+  63   4      
+  64   4            else if (DunNum==6)  //√ø¥Œ6’≈
+*** ERROR C202 IN LINE 64 OF search.c: 'DunNum': undefined identifier
+  65   4            {
+  66   5              if ((pai2==TABLE[point-((XianNum-1)*Person+2-7)])||(pai2==TABLE[point+((XianNum-1)*Person+2-7)]))  //
+             -((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+*** ERROR C202 IN LINE 66 OF search.c: 'pai2': undefined identifier
+  67   5                   {
+  68   6                   FangWei=2;
+*** ERROR C202 IN LINE 68 OF search.c: 'FangWei': undefined identifier
+  69   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-7)])  {point=point+1;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 69 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 69 OF search.c: 'point': undefined identifier
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 3   
+
+  70   6                  else point=point+((XianNum-1)*Person+2-7)+1;
+*** ERROR C202 IN LINE 70 OF search.c: 'point': undefined identifier
+  71   6                 } 
+  72   5      
+  73   5               }        
+  74   4            }  //œ–º“Ω· ¯
+  75   3            if (FangWei!=0)
+*** ERROR C202 IN LINE 75 OF search.c: 'FangWei': undefined identifier
+  76   3                {
+  77   4                         ZhuangPAI[1][XianNum]=TABLE[point-2];
+*** ERROR C202 IN LINE 77 OF search.c: 'ZhuangPAI': undefined identifier
+  78   4                         ZhuangPAI[1][XianNum+1]=TABLE[point+2];
+*** ERROR C202 IN LINE 78 OF search.c: 'ZhuangPAI': undefined identifier
+  79   4                         ZhuangPAI[2][XianNum]=TABLE[point-1];
+*** ERROR C202 IN LINE 79 OF search.c: 'ZhuangPAI': undefined identifier
+  80   4                         point++;   //∏ÙÃ¯µƒ÷∏’Î±»Ωœ¬“£¨µ˜’˚÷∏’Î£¨ÃÊªª“ª’≈≈∆°£∫Û√ÊæÕ±»ΩœÀ≥¡À
+*** ERROR C202 IN LINE 80 OF search.c: 'point': undefined identifier
+  81   4                        TABLE[point+2]=TABLE[point+1];
+*** ERROR C202 IN LINE 81 OF search.c: 'point': undefined identifier
+  82   4                        TABLE[point+1]=TABLE[point];
+*** ERROR C202 IN LINE 82 OF search.c: 'point': undefined identifier
+  83   4                        point++;
+*** ERROR C202 IN LINE 83 OF search.c: 'point': undefined identifier
+  84   4                  
+  85   4                }           
+  86   3           }
+  87   2        else if (mark==2)   //∆ΩÃ¯
+*** ERROR C202 IN LINE 87 OF search.c: 'mark': undefined identifier
+  88   2           {
+  89   3            if ((pai2==TABLE[point-2])||(pai2==TABLE[point+2]))   ////∆ΩÃ¯,µ⁄∂˛’≈‘⁄«∞√ÊªÚ’ﬂ∫Û√Ê¡Ω’≈
+*** ERROR C202 IN LINE 89 OF search.c: 'pai2': undefined identifier
+  90   3             {
+  91   4             if (pai2==TABLE[point-2]) point=point+1;  //◊Øº“◊•ÕÍ£¨ªπ–Ë“™◊•µÙ2’≈
+*** ERROR C202 IN LINE 91 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 91 OF search.c: 'point': undefined identifier
+  92   4               else point=point+3;  //point÷∏œÚµƒ≈∆ «–¬≈∆
+*** ERROR C202 IN LINE 92 OF search.c: 'point': undefined identifier
+  93   4               FangWei=1;   //∑ΩŒª=1£¨±Ì æ◊Øº“
+*** ERROR C202 IN LINE 93 OF search.c: 'FangWei': undefined identifier
+  94   4                        
+  95   4               }
+  96   3           else //œ–º“
+  97   3            {
+  98   4             if (DunNum==4)  //√ø¥Œ4’≈
+*** ERROR C202 IN LINE 98 OF search.c: 'DunNum': undefined identifier
+  99   4              {
+ 100   5              
+ 101   5              if ((pai2==TABLE[point-((XianNum-1)*Person+2-5)])||(pai2==TABLE[point+((XianNum-1)*Person+2-5)])) //(
+             -(pai2==TABLE[point-45])||(pai2==TABLE[point+45])) 
+*** ERROR C202 IN LINE 101 OF search.c: 'pai2': undefined identifier
+ 102   5                   {
+ 103   6                   FangWei=2;
+*** ERROR C202 IN LINE 103 OF search.c: 'FangWei': undefined identifier
+ 104   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-5)])  {point=point+2;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 104 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 104 OF search.c: 'point': undefined identifier
+ 105   6                  else point=point+((XianNum-1)*Person+2-5)+2;//;
+*** ERROR C202 IN LINE 105 OF search.c: 'point': undefined identifier
+ 106   6                 } 
+ 107   5              
+ 108   5             }
+ 109   4            else if (DunNum==2)  //√ø¥Œ2’≈
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 4   
+
+*** ERROR C202 IN LINE 109 OF search.c: 'DunNum': undefined identifier
+ 110   4            {
+ 111   5              if ((pai2==TABLE[point-((XianNum-1)*Person+2-3)])||(pai2==TABLE[point+((XianNum-1)*Person+2-3)]))  //
+             -((pai2==TABLE[point-47])||(pai2==TABLE[point+47])) 
+*** ERROR C202 IN LINE 111 OF search.c: 'pai2': undefined identifier
+ 112   5                   {
+ 113   6                   FangWei=2;
+*** ERROR C202 IN LINE 113 OF search.c: 'FangWei': undefined identifier
+ 114   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-3)])  {point=point+2;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 114 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 114 OF search.c: 'point': undefined identifier
+ 115   6                  else point=point+((XianNum-1)*Person+2-3)+2;//51;
+*** ERROR C202 IN LINE 115 OF search.c: 'point': undefined identifier
+ 116   6                 } 
+ 117   5              
+ 118   5            }
+ 119   4      
+ 120   4            else if (DunNum==6)  //√ø¥Œ6’≈
+*** ERROR C202 IN LINE 120 OF search.c: 'DunNum': undefined identifier
+ 121   4            {
+ 122   5            if ((pai2==TABLE[point-((XianNum-1)*Person+2-7)])||(pai2==TABLE[point+((XianNum-1)*Person+2-7)]))  //
+             -((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+*** ERROR C202 IN LINE 122 OF search.c: 'pai2': undefined identifier
+ 123   5                   {
+ 124   6                   FangWei=2;
+*** ERROR C202 IN LINE 124 OF search.c: 'FangWei': undefined identifier
+ 125   6                 if (pai2==TABLE[point-((XianNum-1)*Person+2-7)])  {point=point+2;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 125 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 125 OF search.c: 'point': undefined identifier
+ 126   6                  else point=point+((XianNum-1)*Person+2-7)+2;//47;
+*** ERROR C202 IN LINE 126 OF search.c: 'point': undefined identifier
+ 127   6                 } 
+ 128   5                       
+ 129   5              }
+ 130   4            
+ 131   4            } 
+ 132   3                 if (FangWei!=0)
+*** ERROR C202 IN LINE 132 OF search.c: 'FangWei': undefined identifier
+ 133   3                 {
+ 134   4                         ZhuangPAI[1][XianNum]=TABLE[point-3];
+*** ERROR C202 IN LINE 134 OF search.c: 'ZhuangPAI': undefined identifier
+ 135   4                         ZhuangPAI[1][XianNum+1]=TABLE[point-1];
+*** ERROR C202 IN LINE 135 OF search.c: 'ZhuangPAI': undefined identifier
+ 136   4                         ZhuangPAI[2][XianNum]=TABLE[point-2];
+*** ERROR C202 IN LINE 136 OF search.c: 'ZhuangPAI': undefined identifier
+ 137   4            
+ 138   4                 }             
+ 139   3         }
+ 140   2         //  ˙Ã¯
+ 141   2         else if (mark==1) 
+*** ERROR C202 IN LINE 141 OF search.c: 'mark': undefined identifier
+ 142   2          {
+ 143   3            if ((pai2==TABLE[point+1])||(pai2==TABLE[point-1]))
+*** ERROR C202 IN LINE 143 OF search.c: 'pai2': undefined identifier
+ 144   3             {
+ 145   4              if (pai2==TABLE[point-1]) point=point+2;   //point÷∏œÚµƒ≈∆ «–¬≈∆
+*** ERROR C202 IN LINE 145 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 145 OF search.c: 'point': undefined identifier
+ 146   4                else point=point+3; //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 146 OF search.c: 'point': undefined identifier
+ 147   4      
+ 148   4            FangWei=1;   //∑ΩŒª=1£¨±Ì æ◊Øº“
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 5   
+
+*** ERROR C202 IN LINE 148 OF search.c: 'FangWei': undefined identifier
+ 149   4             }
+ 150   3           else //œ–º“
+ 151   3            {
+ 152   4             if (DunNum==4)  //√ø¥Œ4’≈
+*** ERROR C202 IN LINE 152 OF search.c: 'DunNum': undefined identifier
+ 153   4              {
+ 154   5                if ((pai2==TABLE[point-((XianNum-1)*Person+3-5)])||(pai2==TABLE[point+((XianNum-1)*Person+3-5)])) //
+             -((pai2==TABLE[point-46])||(pai2==TABLE[point+46])) 
+*** ERROR C202 IN LINE 154 OF search.c: 'pai2': undefined identifier
+ 155   5                   {
+ 156   6                   FangWei=2;
+*** ERROR C202 IN LINE 156 OF search.c: 'FangWei': undefined identifier
+ 157   6                 if (pai2==TABLE[point-((XianNum-1)*Person+3-5)])  {point=point+1;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 157 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 157 OF search.c: 'point': undefined identifier
+ 158   6                  else point=point+((XianNum-1)*Person+3-5)+1;//49;
+*** ERROR C202 IN LINE 158 OF search.c: 'point': undefined identifier
+ 159   6                 } 
+ 160   5              
+ 161   5             }
+ 162   4            else if (DunNum==2)  //√ø¥Œ2’≈
+*** ERROR C202 IN LINE 162 OF search.c: 'DunNum': undefined identifier
+ 163   4            {
+ 164   5      
+ 165   5              if ((pai2==TABLE[point-((XianNum-1)*Person+3-3)])||(pai2==TABLE[point+((XianNum-1)*Person+3-3)])) //(
+             -(pai2==TABLE[point-48])||(pai2==TABLE[point+48])) 
+*** ERROR C202 IN LINE 165 OF search.c: 'pai2': undefined identifier
+ 166   5                   {
+ 167   6                   FangWei=2;
+*** ERROR C202 IN LINE 167 OF search.c: 'FangWei': undefined identifier
+ 168   6                 if (pai2==TABLE[point-((XianNum-1)*Person+3-3)])  {point=point+1;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 168 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 168 OF search.c: 'point': undefined identifier
+ 169   6                  else point=point+((XianNum-1)*Person+3-3)+1;//51;
+*** ERROR C202 IN LINE 169 OF search.c: 'point': undefined identifier
+ 170   6                 } 
+ 171   5              
+ 172   5              
+ 173   5            }
+ 174   4            else if (DunNum==6)  //√ø¥Œ6’≈
+*** ERROR C202 IN LINE 174 OF search.c: 'DunNum': undefined identifier
+ 175   4            {
+ 176   5            
+ 177   5              if ((pai2==TABLE[point-((XianNum-1)*Person+3-7)])||(pai2==TABLE[point+((XianNum-1)*Person+3-7)])) //(
+             -(pai2==TABLE[point-44])||(pai2==TABLE[point+44])) 
+*** ERROR C202 IN LINE 177 OF search.c: 'pai2': undefined identifier
+ 178   5                   {
+ 179   6                   FangWei=2;
+*** ERROR C202 IN LINE 179 OF search.c: 'FangWei': undefined identifier
+ 180   6                 if (pai2==TABLE[point-((XianNum-1)*Person+3-7)])  {point=point+1;}  //÷∏œÚ–¬≈∆ 
+*** ERROR C202 IN LINE 180 OF search.c: 'pai2': undefined identifier
+*** ERROR C202 IN LINE 180 OF search.c: 'point': undefined identifier
+ 181   6                  else point=point+((XianNum-1)*Person+3-7)+1;//47;
+*** ERROR C202 IN LINE 181 OF search.c: 'point': undefined identifier
+ 182   6                 } 
+ 183   5               
+ 184   5              
+ 185   5             }
+ 186   4           }  //œ–º“Ω· ¯
+ 187   3             if (FangWei!=0)
+*** ERROR C202 IN LINE 187 OF search.c: 'FangWei': undefined identifier
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 6   
+
+ 188   3                 {
+ 189   4                         ZhuangPAI[1][XianNum]=TABLE[point-3];
+*** ERROR C202 IN LINE 189 OF search.c: 'ZhuangPAI': undefined identifier
+ 190   4                         ZhuangPAI[1][XianNum+1]=TABLE[point-2];
+*** ERROR C202 IN LINE 190 OF search.c: 'ZhuangPAI': undefined identifier
+ 191   4                         ZhuangPAI[2][XianNum]=TABLE[point-1];
+*** ERROR C202 IN LINE 191 OF search.c: 'ZhuangPAI': undefined identifier
+ 192   4                        
+ 193   4                 }      
+ 194   3                        
+ 195   3         }  // ˙Ã¯Ω· ¯
+ 196   2       }
+ 197   1            
+ 198   1        //∏˘æ›point∑÷≥ˆ4∏±≈∆£¨point «÷∏œÚ¬Ì…œ“™◊•µƒ–¬≈∆   
+ 199   1          if (XianNum==13) li=point-(Person+1)-((XianNum-1)*Person);  //“ÚŒ™◊Ó∫Û“ª’≈“—æ≠∑≈∫√¡À£¨//ªÿÕÀµΩø™ º◊•≈∆µƒ
+             -∆µ„
+*** ERROR C202 IN LINE 199 OF search.c: 'XianNum': undefined identifier
+*** ERROR C202 IN LINE 199 OF search.c: 'li': undefined identifier
+ 200   1            else li=point-Person*(XianNum)+1;//65;
+*** ERROR C202 IN LINE 200 OF search.c: 'li': undefined identifier
+ 201   1          Tail=li-1;
+*** ERROR C202 IN LINE 201 OF search.c: 'Tail': undefined identifier
+ 202   1          Head=Tail+PaiTotal;  //◊¿√Ê…œ≈∆£¨æÕ «pointø™ ºµΩHeadΩ· ¯
+*** ERROR C202 IN LINE 202 OF search.c: 'Head': undefined identifier
+ 203   1          //∏‹≈∆ «µπ◊≈±®£¨∏˙TABLEÀ≥–Ú≤ª“ª—˘£¨œ»±®n-1£¨‘Ÿ±®n°£÷ÿ–¬’˚¿ÌµΩGangTable
+ 204   1          for (j=0;j<50;j=j+2)     
+*** ERROR C202 IN LINE 204 OF search.c: 'j': undefined identifier
+ 205   1           {
+ 206   2             GangTable[j]=TABLE[Tail-j-1];
+*** ERROR C202 IN LINE 206 OF search.c: 'j': undefined identifier
+ 207   2             GangTable[j+1]=TABLE[Tail-j];
+*** ERROR C202 IN LINE 207 OF search.c: 'j': undefined identifier
+ 208   2           }
+ 209   1              n=0;
+*** ERROR C202 IN LINE 209 OF search.c: 'n': undefined identifier
+ 210   1             for (j=1;j<=(XianNum/DunNum);j++)    //13’≈,√ø¬÷DunNum=4£¨“ªπ≤◊•(XianNum/DunNum)=3¬÷£¨ª˘±æµƒ≈∆ ˝∑÷≈‰∫
+             -√
+*** ERROR C202 IN LINE 210 OF search.c: 'j': undefined identifier
+ 211   1             {
+ 212   2                for (k=1;k<=DunNum;k++)    //√ø»À◊•µƒ’≈ ˝DunNum =4 £¨¥”œ¬±Í1ø™ º∑≈
+*** ERROR C202 IN LINE 212 OF search.c: 'k': undefined identifier
+ 213   2                {
+ 214   3                 ZhuangPAI[1][n+k]=TABLE[li];
+*** ERROR C202 IN LINE 214 OF search.c: 'ZhuangPAI': undefined identifier
+ 215   3                 li++;
+*** ERROR C202 IN LINE 215 OF search.c: 'li': undefined identifier
+ 216   3                }
+ 217   2                for (k=1;k<=DunNum;k++)    //√ø»À◊•µƒ’≈ ˝DunNum =4
+*** ERROR C202 IN LINE 217 OF search.c: 'k': undefined identifier
+ 218   2                {
+ 219   3                ZhuangPAI[2][n+k]=TABLE[li];
+*** ERROR C202 IN LINE 219 OF search.c: 'ZhuangPAI': undefined identifier
+ 220   3                li++;
+*** ERROR C202 IN LINE 220 OF search.c: 'li': undefined identifier
+ 221   3                }
+ 222   2                 for (k=1;k<=DunNum;k++)     //√ø»À◊•µƒ’≈ ˝DunNum =4
+*** ERROR C202 IN LINE 222 OF search.c: 'k': undefined identifier
+ 223   2                {
+ 224   3                ZhuangPAI[3][n+k]=TABLE[li];
+*** ERROR C202 IN LINE 224 OF search.c: 'ZhuangPAI': undefined identifier
+ 225   3                li++;
+*** ERROR C202 IN LINE 225 OF search.c: 'li': undefined identifier
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 7   
+
+ 226   3                }
+ 227   2                
+ 228   2                n=n+DunNum;
+*** ERROR C202 IN LINE 228 OF search.c: 'n': undefined identifier
+ 229   2             }
+ 230   1                
+ 231   1         //À—À˜ZhuangPAI[][] 4∑Ω ÷÷–µƒ2’≈£¨∫Õ3’≈œ‡Õ¨µƒ≈∆’˚¿Ì∑≈»ÎCOUPLE[][],TRI[][]
+ 232   1            for (j=1;j<=Person;j++)
+*** ERROR C202 IN LINE 232 OF search.c: 'j': undefined identifier
+ 233   1              {
+ 234   2            for (n=1;n<=10;n++)
+*** ERROR C202 IN LINE 234 OF search.c: 'n': undefined identifier
+ 235   2               {
+ 236   3              COUPLE[j][n]=0;   //œ»∞—À˘”–µ•‘™«Â¡„°£¥Ê∑≈∂‘◊”±‡∫≈µƒ¥Ê¥¢∆˜£¨1∫≈µ•‘™ø™ º°£µΩƒ⁄»›=0Ω· ¯
+*** ERROR C202 IN LINE 236 OF search.c: 'j': undefined identifier
+ 237   3              TRI[j][n]=0;
+*** ERROR C202 IN LINE 237 OF search.c: 'j': undefined identifier
+ 238   3             }
+ 239   2            }
+ 240   1      
+ 241   1             repeat=1;
+*** ERROR C202 IN LINE 241 OF search.c: 'repeat': undefined identifier
+ 242   1             for (j=1;j<=Person;j++)    //j£¨4∏∂≈∆
+*** ERROR C202 IN LINE 242 OF search.c: 'j': undefined identifier
+ 243   1             { m2=1;m3=1;
+*** ERROR C202 IN LINE 243 OF search.c: 'm2': undefined identifier
+*** ERROR C202 IN LINE 243 OF search.c: 'm3': undefined identifier
+ 244   2               for (n=1;n<ZhuangNum;n++)
+*** ERROR C202 IN LINE 244 OF search.c: 'n': undefined identifier
+ 245   2               ZhuangPAITemp[n]=ZhuangPAI[j][n];   //∞—–Ë“™—∞’“µƒƒ«∏±≈∆∑≈µΩ‘›¥Ê«¯
+*** ERROR C202 IN LINE 245 OF search.c: 'n': undefined identifier
+ 246   2               for (n=1;n<ZhuangNum-1;n++)   //14’≈≈∆“ª“ª—∞’“£¨nœ»»°“ª’≈ £¨k∏˙’‚’≈∫Û√Êµƒ±»Ωœ£¨repeat÷ÿ∏¥ ˝£¨=2ªÚ’ﬂ=
+             -3
+*** ERROR C202 IN LINE 246 OF search.c: 'n': undefined identifier
+ 247   2              {
+ 248   3                 for (k=n+1;k<=ZhuangNum;k++)
+*** ERROR C202 IN LINE 248 OF search.c: 'k': undefined identifier
+ 249   3               {    //4∏ˆ1ÕÚ£¨±‡∫≈¡¨–¯4∏ˆ ˝°£∏’∏’∫√/4 «“ª—˘µƒ
+ 250   4                 if (((ZhuangPAITemp[n]/4)==(ZhuangPAITemp[k]/4))&&(ZhuangPAITemp[k]!=0)&&(ZhuangPAITemp[n]!=0))
+*** ERROR C202 IN LINE 250 OF search.c: 'n': undefined identifier
+ 251   4                      {repeat++;ZhuangPAITemp[k]=0;}     //“—æ≠’“µΩµƒ≈∆Œª÷√«Â¡„£¨÷ª¡Ùµ⁄“ª’≈£¨∫Û√Ê≤ª–Ë“™’“°£±‹√‚∏’∏’’“
+             -µΩ3’≈£¨∫Û√Ê”÷»œŒ™”–2’≈∂‘◊”
+*** ERROR C202 IN LINE 251 OF search.c: 'repeat': undefined identifier
+*** ERROR C202 IN LINE 251 OF search.c: 'k': undefined identifier
+ 252   4               }
+ 253   3               if (repeat==2)  //∂‘◊”
+*** ERROR C202 IN LINE 253 OF search.c: 'repeat': undefined identifier
+ 254   3               {
+ 255   4                COUPLE[j][m2]=ZhuangPAITemp[n]; 
+*** ERROR C202 IN LINE 255 OF search.c: 'j': undefined identifier
+ 256   4                m2++; //¥”[1][1]ø™ º¥Ê∑≈
+*** ERROR C202 IN LINE 256 OF search.c: 'm2': undefined identifier
+ 257   4               }
+ 258   3                else if (repeat==3)  //»˝’≈
+*** ERROR C202 IN LINE 258 OF search.c: 'repeat': undefined identifier
+ 259   3                {
+ 260   4                TRI[j][m3]=ZhuangPAITemp[n]; 
+*** ERROR C202 IN LINE 260 OF search.c: 'j': undefined identifier
+ 261   4                m3++;
+*** ERROR C202 IN LINE 261 OF search.c: 'm3': undefined identifier
+ 262   4                }
+ 263   3                repeat=1;
+C51 COMPILER V9.56.0.0   SEARCH                                                            05/20/2017 21:22:03 PAGE 8   
+
+*** ERROR C202 IN LINE 263 OF search.c: 'repeat': undefined identifier
+ 264   3               }
+ 265   2            }
+ 266   1      
+ 267   1        /////∏˘æ›◊‘º∫µƒ∑ΩŒªFangWei£¨±®≥ˆ∂‘ ÷µƒ≈ˆ≈∆∫Õ∏‹≈∆,FangWei=1±Ì æ◊Øº“”–14’≈   
+ 268   1         m2=1;m3=1;
+*** ERROR C202 IN LINE 268 OF search.c: 'm2': undefined identifier
+*** ERROR C202 IN LINE 268 OF search.c: 'm3': undefined identifier
+ 269   1         for (n=1;n<=9;n++)
+*** ERROR C202 IN LINE 269 OF search.c: 'n': undefined identifier
+ 270   1          {
+ 271   2          ReportGang[n]=0;
+*** ERROR C202 IN LINE 271 OF search.c: 'n': undefined identifier
+ 272   2          ReportPen[n]=0;         
+*** ERROR C202 IN LINE 272 OF search.c: 'n': undefined identifier
+ 273   2          }
+ 274   1         for (n=1;n<=ZhuangNum;n++)   //∞¥’’14’≈¿¥—∞’“£¨»Áπ˚œ–º“£¨◊Ó∫Û“ª’≈=0, “≤’“≤ª◊≈∆•≈‰µƒ
+*** ERROR C202 IN LINE 274 OF search.c: 'n': undefined identifier
+ 275   1         {
+ 276   2           for (f=1;f<Person;f++)  //∞¥∑ΩŒª£¨“ª∑Ω∑Ω’“
+*** ERROR C202 IN LINE 276 OF search.c: 'f': undefined identifier
+ 277   2          {
+ 278   3          if (f==FangWei) continue;   //◊‘º∫µƒ∑ΩŒª£¨≤ª’“
+*** ERROR C202 IN LINE 278 OF search.c: 'f': undefined identifier
+ 279   3          for (j=1;j<=9;j++)  
+*** ERROR C202 IN LINE 279 OF search.c: 'j': undefined identifier
+ 280   3           {
+ 281   4            if (COUPLE[f][j]==0) break;   //0¥˙±Ì∫Û√Ê√ª”–¡À
+*** ERROR C202 IN LINE 281 OF search.c: 'f': undefined identifier
+ 282   4            if ((ZhuangPAI[FangWei][n]/4)==(COUPLE[f][j]/4))  //◊‘º∫µƒ≈∆∫Õ±µƒ∑ΩŒª’“µΩµƒ∂‘◊”±‡∫≈±»Ωœ
+*** ERROR C202 IN LINE 282 OF search.c: 'FangWei': undefined identifier
+ 283   4            {
+ 284   5             ReportPen[m2]=ZhuangPAI[FangWei][n];m2++;
+*** ERROR C202 IN LINE 284 OF search.c: 'm2': undefined identifier
+*** ERROR C202 IN LINE 284 OF search.c: 'm2': undefined identifier
+ 285   5            }
+ 286   4           }
+ 287   3           for (j=1;j<=9;j++)
+*** ERROR C202 IN LINE 287 OF search.c: 'j': undefined identifier
+ 288   3           {
+ 289   4            if (TRI[f][j]==0) break;
+*** ERROR C202 IN LINE 289 OF search.c: 'f': undefined identifier
+ 290   4            if ((ZhuangPAI[FangWei][n]/4)==(TRI[f][j]/4)) 
+*** ERROR C202 IN LINE 290 OF search.c: 'FangWei': undefined identifier
+ 291   4            {
+ 292   5             ReportGang[m3]=ZhuangPAI[FangWei][n];m3++;
+*** ERROR C202 IN LINE 292 OF search.c: 'm3': undefined identifier
+*** ERROR C202 IN LINE 292 OF search.c: 'm3': undefined identifier
+ 293   5            }
+ 294   4           }
+ 295   3           
+ 296   3          }
+ 297   2         }
+ 298   1        
+ 299   1      
+ 300   1       }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  168 ERROR(S)

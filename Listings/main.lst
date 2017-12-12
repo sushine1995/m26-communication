@@ -1,0 +1,1263 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: F:\Program Files (x86\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PR
+                    -INT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1           
+   2          #include<varmain.h> 
+   3          #include<string.h>
+   4          #define SetPoint_ee 0x0200 //Éè¶¨
+   5          /*********EEPROMÉèÖÃÏà¹Ø**************/
+   6            sfr ISP_DATA=0xc2;
+   7            sfr ISP_ADDRH=0xc3;
+   8            sfr ISP_ADDRL=0xc4;
+   9            sfr ISP_CMD=0xc5;
+  10            sfr ISP_TRIG=0xc6;
+  11            sfr ISP_CONTR=0xc7;
+  12          /*************************************/
+  13          /***EEPROM¶ÁÈ¡Ïà¹Ø*****************/
+  14          #define ISP_READ_BYTE 1  //EEPROM¶Á
+  15          #define ISP_PROG_BYTE 2  //EEPROM±à³Ì
+  16          #define ISP_SECTOR_ERASE 3 //EEPROMÉÈÇø²Á³ý
+  17          #define ENABLE_ISP 0x83 //ÔÊÐí±à³Ì£¬¶ÔÓ¦ÓÚ12MHz 
+  18          /*************************************
+  19           º¯ Êý Ãû : EEPROM_write_byte
+  20           ¹¦    ÄÜ : Ð´Ò»Ò»¸ö×Ö½ÚµÄEEPROMÊý¾Ý
+  21           Èë¿Ú²ÎÊý :  addrH ¸ßÎ»µØÖ·
+  22                       addrL µÍÎ»µØÖ·
+  23                       wdata  ÒªÐ´ÈëµÄÊý¾Ý
+  24           ·µ»Ø²ÎÊý :  ÎÞ
+  25          
+  26          *************************************/
+  27          void EEPROM_write_byte(unsigned int addr,unsigned char wdata)
+  28          {  unsigned char addrH,addrL;
+  29   1            addrH=addr/256;
+  30   1            addrL=addr%256;
+  31   1            ISP_CONTR=ENABLE_ISP;//´ò¿ªIAP¹¦ÄÜ£¬ÉèÖÃFlash²Ù×÷µÈ´ýÊ±¼ä
+  32   1            ISP_CMD=ISP_PROG_BYTE;//ÉèÖÃÎª×Ö½Ú±à³ÌÄ£Ê½
+  33   1            ISP_ADDRH=addrH; //Êý¾ÝµØÖ·
+  34   1            ISP_ADDRL=addrL;
+  35   1            ISP_DATA=wdata; //ËÍÐèÒª´æ´¢µÄÊý¾Ý
+  36   1            EA=0;
+  37   1        ISP_TRIG=0x5a; //´¥·¢IAPÃüÁî
+  38   1        ISP_TRIG=0xa5;
+  39   1            _nop_();
+  40   1            EA=1;
+  41   1      }
+  42          /*************************************
+  43           º¯ Êý Ãû :EEPROM_sector_erase
+  44           ¹¦    ÄÜ : É¾³ýÉÈÇøµÄÄÚÈÝ
+  45           Èë¿Ú²ÎÊý :  addrH ¸ßÎ»µØÖ·
+  46                       addrL µÍÎ»µØÖ·
+  47           ·µ»Ø²ÎÊý :  ÎÞ
+  48          
+  49          *************************************/
+  50          void EEPROM_sector_erase(unsigned int addr)
+  51          {  unsigned char addrH,addrL;
+  52   1           addrH=addr/256;
+  53   1         addrL=addr%256;
+  54   1           ISP_CONTR=ENABLE_ISP;//´ò¿ªIAP¹¦ÄÜ£¬ÉèÖÃFlash²Ù×÷µÈ´ýÊ±¼ä
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 2   
+
+  55   1           ISP_CMD=ISP_SECTOR_ERASE;
+  56   1           ISP_ADDRH=addrH; //Êý¾ÝµØÖ·
+  57   1           ISP_ADDRL=addrL;
+  58   1           EA=0;
+  59   1        ISP_TRIG=0x5a; //´¥·¢IAPÃüÁî
+  60   1        ISP_TRIG=0xa5;
+  61   1           _nop_();
+  62   1           EA=1;
+  63   1      }
+  64          /*************************************
+  65           º¯ Êý Ãû : EEPROM_read_byte
+  66           ¹¦    ÄÜ : ¶ÁÈ¡Ò»¸ö×Ö½ÚµÄEEPROMÊý¾Ý
+  67           Èë¿Ú²ÎÊý :  addrH ¸ßÎ»µØÖ·
+  68                       addrL µÍÎ»µØÖ·
+  69           ·µ»Ø²ÎÊý :  ÎÞ 
+  70          
+  71          *************************************/
+  72          unsigned char EEPROM_read_byte(unsigned int addr)
+  73          {
+  74   1        unsigned char temp;
+  75   1        unsigned char addrH,addrL;
+  76   1        addrH=addr/256;
+  77   1         addrL=addr%256;
+  78   1              ISP_CONTR=ENABLE_ISP;//´ò¿ªIAP¹¦ÄÜ£¬ÉèÖÃFlash²Ù×÷µÈ´ýÊ±¼ä
+  79   1        ISP_CMD=ISP_READ_BYTE;//ÉèÖÃÎª×Ö½Ú¶ÁÄ£Ê½
+  80   1        ISP_ADDRH=addrH;  //Êý¾ÝµØÖ·
+  81   1        ISP_ADDRL=addrL;
+  82   1        EA=0;//¹ØÖÐ¶Ï
+  83   1        ISP_TRIG=0x5a; //´¥·¢IAPÃüÁî
+  84   1        ISP_TRIG=0xa5;
+  85   1              _nop_();
+  86   1              temp=ISP_DATA;
+  87   1        EA=1;
+  88   1              return(temp);
+  89   1      
+  90   1      
+  91   1      }
+  92          //****************************************************8
+  93          //uint crccheck(uchar *ptr, uchar len)       //CRCÐ£Ñé³ÌÐò
+  94          //{
+  95          //uchar uchCRCHi = 0xFF ;   /* high byte of CRC initialized */
+  96          //uchar uchCRCLo = 0xFF ;   /* low byte of CRC initialized */
+  97          //uchar uIndex ;            /* will index into CRC lookup table */
+  98          //while (len--)                  /* pass through message buffer */
+  99          //{
+ 100          //uIndex = uchCRCHi ^ *ptr++ ;   /* calculate the CRC */
+ 101          //uchCRCHi = uchCRCLo ^ auchCRCHi[uIndex] ;
+ 102          //uchCRCLo = auchCRCLo[uIndex] ;
+ 103          //}
+ 104          //return (uchCRCHi<<8|uchCRCLo) ;
+ 105          //}
+ 106          
+ 107          //*****************************************************************************************
+ 108          //º¯ÊýÃû£ºdelay(unsigned int s)
+ 109          //ÊäÈë£ºÊ±¼ä
+ 110          //Êä³ö£ºÎÞ
+ 111          //¹¦ÄÜÃèÊö£ºÆÕÍ¨Í¢Ê±,ÄÚ²¿ÓÃ
+ 112          //*****************************************************************************************  
+ 113          static void delay(unsigned int s)
+ 114          {
+ 115   1      unsigned int i;
+ 116   1      for(i=0; i<s; i++);
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 3   
+
+ 117   1      for(i=0; i<s; i++);
+ 118   1      }
+ 119          
+ 120          void delayms(unsigned int k)
+ 121          {
+ 122   1        unsigned int i,j;
+ 123   1        WDT_CONTR=0x3e;
+ 124   1        for(i = 0; i < k; i++)
+ 125   1          for(j = 0; j < 1000; j++)
+ 126   1          ;
+ 127   1      }
+ 128          
+ 129          
+ 130          void DelayMin(uchar m)
+ 131          {
+ 132   1        uchar i,j;
+ 133   1        for( i = 0; i < m ; i ++)
+ 134   1        {
+ 135   2          for( j =0; j <20; j++)
+ 136   2          { 
+ 137   3            delayms(1000);
+ 138   3            delayms(1000);
+ 139   3            delayms(1000);
+ 140   3            WDT_CONTR = 0x3E;
+ 141   3          }
+ 142   2        }
+ 143   1      }
+ 144          //º¯ Êý Ãû: ClearRecBuff
+ 145          //º¯Êý¹¦ÄÜ: Çå³ý´®¿Ú2½ÓÊÕ»º´æÖÐµÄÊý¾Ý
+ 146          //Èë¿Ú²ÎÊý: ÎÞ
+ 147          //·µ»Ø²ÎÊý: ÎÞ
+ 148          //*************************************/
+ 149          void ClearRecBuff()
+ 150          {
+ 151   1      
+ 152   1        uchar i = 0;  
+ 153   1        for(i=0; i < recv_data_count; i++)
+ 154   1        {
+ 155   2          recv_data[i] = '\0';    //ÔÚÖ´ÐÐÃüÁîµÄ²¿·ÖÊ¹ÓÃµÄÊÇrecv_data£¬¿ÉÒÔÖ»Ê¹ÓÃÒ»¸ö
+ 156   2          RxBuf2[i] = '\0';
+ 157   2        }
+ 158   1        recv_data_count = 0;      //±íÊ¾°ÑÊý¾ÝµÄ¼ÇÂ¼Î»ÖÃÇåÁã,ÓëBlueSendCnt¹¦ÄÜÏàÍ¬£¬µ«ÐèÒªÕûÀí
+ 159   1        BlueSendCnt=0;  
+ 160   1      }
+ 161          
+ 162          
+ 163          void PowerOnGprs()//³õÊ¼»¯15S     
+ 164          {
+ 165   1      
+ 166   1        //Send_String(" &&PowerOnGprs()&& ");
+ 167   1        RESET_M26 = 0;      //À­¸ß
+ 168   1        delayms(1000);
+ 169   1        WDT_CONTR = 0x3E;   //feed dog
+ 170   1        RESET_M26 = 1;      //À­µÍ4s
+ 171   1        delayms(1000);
+ 172   1        delayms(1000);
+ 173   1        delayms(1000);
+ 174   1        WDT_CONTR = 0x3E;
+ 175   1        delayms(1000);
+ 176   1        delayms(1000);
+ 177   1        WDT_CONTR = 0x3E;
+ 178   1        RESET_M26 = 0;      //À­¸ß
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 4   
+
+ 179   1        delayms(1000);
+ 180   1        delayms(1000);
+ 181   1        
+ 182   1        WDT_CONTR = 0x3E;
+ 183   1        delayms(1000);
+ 184   1        WDT_CONTR = 0x3E;
+ 185   1        delayms(1000);
+ 186   1        WDT_CONTR = 0x3E;
+ 187   1      }
+ 188          
+ 189          
+ 190          
+ 191          
+ 192          void Send_byte(INT8U odata)
+ 193          {
+ 194   1       
+ 195   1          //ES=0;
+ 196   1          SBUF = odata;
+ 197   1          while (!TI);
+ 198   1          TI = 0;
+ 199   1         // ES=1;
+ 200   1      }
+ 201          
+ 202          /*************************************************
+ 203          º¯ÊýÃû³Æ£ºSend_String
+ 204          º¯Êý¹¦ÄÜ£º´®¿Ú1£¬·¢ËÍÒ»¸ö²»¶¨³¤×Ö·û´®
+ 205          Èë¿Ú²ÎÊý£º·¢ËÍ×Ö·û´®µØÖ·
+ 206          ·µ»Ø²ÎÊý£ºÎÞ
+ 207          *************************************************/
+ 208          void Send_String(INT8U *buf_addr)         //·¢ËÍ×Ö·û´®£¬²»´ø³¤¶ÈÏÞÖÆ
+ 209          {
+ 210   1          uchar *p;
+ 211   1          p = buf_addr;
+ 212   1          while( *p != '\0' )
+ 213   1          {
+ 214   2              Send_byte(*p);
+ 215   2          p++;
+ 216   2          }
+ 217   1      }
+ 218          
+ 219          /*************************************************
+ 220          º¯ÊýÃû³Æ£ºSend_String_Len
+ 221          º¯Êý¹¦ÄÜ£º´®¿Ú1£¬·¢ËÍÒ»¸ö¶¨³¤×Ö·û´®
+ 222          Èë¿Ú²ÎÊý£º·¢ËÍ×Ö·û´®µØÖ·
+ 223          ·µ»Ø²ÎÊý£ºÎÞ
+ 224          *************************************************/
+ 225          void Send_String_Len(INT8U *buf_addr,INT8U length)
+ 226          {
+ 227   1          INT8U k;
+ 228   1          for (k=0;k<length;k++)
+ 229   1          {
+ 230   2              Send_byte(*(buf_addr+k));
+ 231   2          }
+ 232   1      }
+ 233          
+ 234          void Send_byte2(INT8U odata)
+ 235          {
+ 236   1       
+ 237   1        S2BUF = odata;
+ 238   1          while(!(S2CON&0x02));
+ 239   1        S2CON = S2CON & 0xFD;
+ 240   1      
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 5   
+
+ 241   1      }
+ 242          
+ 243          
+ 244          void Send_String2(INT8U *buf_addr)
+ 245          {
+ 246   1          uchar *p;
+ 247   1          p = buf_addr;
+ 248   1          while( *p != '\0' )
+ 249   1          {
+ 250   2              Send_byte2(*p);
+ 251   2          p++;
+ 252   2          }
+ 253   1      }
+ 254          void Send_String2_Len(INT8U *buf_addr,INT8U length)
+ 255          {
+ 256   1          INT8U k;
+ 257   1          for (k=0;k<length;k++)
+ 258   1          {
+ 259   2              Send_byte2(*(buf_addr+k));
+ 260   2          }
+ 261   1      }
+ 262          ///////
+ 263          void Timer0(void) interrupt 1  using 2    //10ms
+ 264          {
+ 265   1      //  CNT1++;
+ 266   1      //  CNT2++;
+ 267   1        TimeCount++;      //¼ÆÊ±
+ 268   1        //LightCount++;
+ 269   1        //UpLoadCount++;
+ 270   1        if(RecWaitFlag)   //´®¿Ú1±íÊ¾Òª½øÐÐÅÐ¶Ï
+ 271   1        {
+ 272   2          RecWaitCounter ++;
+ 273   2          if(RecWaitCounter >=20)     //200ms£¬´®¿Ú1½ÓÊÕÍê³É±êÖ¾
+ 274   2          {
+ 275   3            RecWaitFlag = FALSE;
+ 276   3            RecWaitCounter = 0;
+ 277   3            RecFinish = TRUE;
+ 278   3            MobilRECOK=1;            //´®¿Ú1½ÓÊÕÍê³É±êÖ¾
+ 279   3            //Send_String_Len(RxBuf,BlueGetCnt);
+ 280   3          }     
+ 281   2        }
+ 282   1        
+ 283   1        if(RecWaitFlag2)      //¶Ô´®¿Ú2ÅÐ¶Ï
+ 284   1        {
+ 285   2          RecWaitCounter2 ++;
+ 286   2          if (RecWaitCounter2 >=20)
+ 287   2         { 
+ 288   3           RecWaitFlag2 = FALSE;
+ 289   3           RecWaitCounter2=0; 
+ 290   3           RecFinish2 = TRUE;
+ 291   3         }
+ 292   2        }
+ 293   1        if(DelayTimeCounter1 > 0)
+ 294   1            DelayTimeCounter1 --; 
+ 295   1        //if( PingStart == 1 )//¿ªÊ¼ÐÄÌø¼ì²â
+ 296   1        
+ 297   1        if(IsRecFlag==1){                               //ÔÚ½ÓÊÕµ½·þÎñÆ÷µÄÊý¾ÝÊ±£¬¼ÆÊ±Æ÷Çå¿Õ£¬ÖØÐÂ¼ÆÊ±
+ 298   2          IsRecFlag=0;
+ 299   2          TimeCount=0;
+ 300   2          Second=0;
+ 301   2          Minute=0;
+ 302   2        }
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 6   
+
+ 303   1        
+ 304   1        if( IsTcpSendFunc == 1 || (IsRecFlag ==0 && IsConnected == 1))        //½øÈëTCPSENDdata2·ÖÖÓ»òÕßÃ»ÓÐÊÕµ½Êý¾Ý3
+             -·ÖÖÓ£¬ÔòÖØÆô
+ 305   1        {
+ 306   2          if( TimeCount >=100)//1S
+ 307   2          {
+ 308   3            TimeCount = 0;
+ 309   3            Second++;
+ 310   3            if( Second >=60 )
+ 311   3            {
+ 312   4              Second = 0;
+ 313   4              Minute++;
+ 314   4              if( Minute == 2 && IsTcpSendFunc == 1)    //TCP_SENDDATA³ÖÐø2·ÖÖÓ£¬ÖØÆô
+ 315   4              {
+ 316   5                Minute = 0;
+ 317   5                //PingFlag = 1;
+ 318   5                //QuitTcpFlag=1;
+ 319   5                
+ 320   5                IsTcpSendFunc =0;
+ 321   5                IAP_CONTR |= 0x20;    //ÖØÆô          
+ 322   5              }
+ 323   4              else if( Minute == 3 && IsRecFlag == 0)//Ã»ÓÐÊÕµ½M26·´À¡3·ÖÖÓ£¬ÖØÆô
+ 324   4              {
+ 325   5                Minute = 0;
+ 326   5                IsRecFlag =0;
+ 327   5                IAP_CONTR |= 0x20;    //ÖØÆô          
+ 328   5              }
+ 329   4              
+ 330   4            }
+ 331   3          }
+ 332   2        }
+ 333   1        else {        //·ñÔòÖØÖÃ¼ÆÊ±
+ 334   2          TimeCount = 0;
+ 335   2          Second=0;
+ 336   2          Minute=0;
+ 337   2        }
+ 338   1      }
+ 339          ///
+ 340          //void uart_isr() interrupt   4 using 1  //À´×ÅÖ÷°åµÄ¶ÁÍ·ÐÅÏ¢,10 ×Ö½ÚFE E1 TYPE NUM PAI1£¬PAI2
+ 341          //{ uchar i;
+ 342          //    if (RI)
+ 343          //    {
+ 344          //     RI=0;
+ 345          //     for(i=0;i<9;i++)
+ 346          //      DuoBuf[i]=DuoBuf[i+1];
+ 347          //        DuoBuf[9]=SBUF;
+ 348          //     if((DuoBuf[0]==0xfe)&&(DuoBuf[1]==0xe1)&&(DuoBuf[3]!=0)&&(PaiRECOK==0))
+ 349          //       {
+ 350          //         
+ 351          //       PaiRECOK=1;
+ 352          //      }
+ 353          //    }
+ 354          //    else
+ 355          //        TI=0;
+ 356          //}  
+ 357          
+ 358          void uart_isr() interrupt   4 using 1  //
+ 359          { //uchar i;
+ 360   1          if (RI)
+ 361   1          {
+ 362   2            RI=0;
+ 363   2            RxBuf[BlueGetCnt]=SBUF;      //Óërecv_dataÏà¶Ô
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 7   
+
+ 364   2            temp[BlueGetCnt]=SBUF;       //
+ 365   2            BlueGetCnt++;
+ 366   2            
+ 367   2            RecWaitFlag=TRUE;           //ÅÐ¶ÏÊÇ·ñ½ÓÊÕÍê±Ï      
+ 368   2            LED=~LED; 
+ 369   2            
+ 370   2            RecWaitCounter=0;       //Ö»Òª½ÓÊÕµ½Êý¾Ý£¬µÈ´ý¼ÆÊ±¾ÍÇåÁã
+ 371   2            if( BlueGetCnt > MAX_RECV_LEN )//³¬¹ý×î´ó³¤¶È£¬ÖØÐÂ¿ªÊ¼
+ 372   2            {
+ 373   3              BlueGetCnt = 0;
+ 374   3            }     
+ 375   2          }
+ 376   1          else
+ 377   1              TI=0;
+ 378   1      }
+ 379          
+ 380          void uart_isr2(void) interrupt 8 using 1  //´®¿Ú2£¬½ÓÊÕºÍ·¢ËÍM26
+ 381          { 
+ 382   1          if(S2CON&0x01)                        //S2RI=1£¬½ÓÊÕÀ´×ÔM26µÄÊý¾Ý,reve_data
+ 383   1        { 
+ 384   2          S2CON = S2CON & 0xFE;   //bit0
+ 385   2          RxBuf2[BlueSendCnt]=S2BUF;
+ 386   2          BlueSendCnt++;
+ 387   2          
+ 388   2          recv_data[recv_data_count] = S2BUF;
+ 389   2          recv_data_count++;
+ 390   2          RecWaitFlag2 = TRUE;
+ 391   2          RecWaitCounter2 = 0;
+ 392   2          //IsRecFlag=1;                        //½ÓÊÕµ½M26µÄÊý¾Ý,¸ÄÔÚMain-WhileÖÐ£¬Ö»ÓÐ·þÎñÆ÷Ã»ÓÐ·¢ËÍÊý¾ÝÊ±²Å¼ÆÊ±
+ 393   2          if( recv_data_count > MAX_RECV_LEN )//³¬¹ý×î´ó³¤¶È£¬ÖØÐÂ¿ªÊ¼
+ 394   2          {
+ 395   3            recv_data_count = 0;
+ 396   3          }
+ 397   2          if( BlueSendCnt > MAX_RECV_LEN )    //³¬¹ý×î´ó³¤¶È£¬ÖØÐÂ¿ªÊ¼
+ 398   2          {
+ 399   3            BlueSendCnt = 0;
+ 400   3          }
+ 401   2        }    
+ 402   1      //    else
+ 403   1      //        S2CON = S2CON & 0xFd;
+ 404   1      }
+ 405              
+ 406          
+ 407          /////
+ 408          void UartInit(void)   //9600bps@11.0592MHz
+ 409          {
+ 410   1        SCON = 0x50;    //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 411   1        AUXR &= 0xBF;   //¶¨Ê±Æ÷1Ê±ÖÓÎªFosc/12,¼´12T
+ 412   1        AUXR &= 0xFE;   //´®¿Ú1Ñ¡Ôñ¶¨Ê±Æ÷1Îª²¨ÌØÂÊ·¢ÉúÆ÷
+ 413   1        TMOD &= 0x0F;   //Éè¶¨¶¨Ê±Æ÷1Îª16Î»×Ô¶¯ÖØ×°·½Ê½
+ 414   1        TL1 = 0xE8;   //Éè¶¨¶¨Ê±³õÖµ
+ 415   1        TH1 = 0xFF;   //Éè¶¨¶¨Ê±³õÖµ
+ 416   1        ET1 = 0;    //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï
+ 417   1        TR1 = 1;    //Æô¶¯¶¨Ê±Æ÷1
+ 418   1      //´®¿Ú2,9600
+ 419   1        S2CON = 0x50;   //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 420   1        AUXR |= 0x04;   //¶¨Ê±Æ÷2Ê±ÖÓÎªFosc,¼´1T
+ 421   1        T2L = 0xE0;   //Éè¶¨¶¨Ê±³õÖµ
+ 422   1        T2H = 0xFE;   //Éè¶¨¶¨Ê±³õÖµ
+ 423   1        AUXR |= 0x10;   //Æô¶¯¶¨Ê±Æ÷2
+ 424   1      }
+ 425          
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 8   
+
+ 426          //void UartInit(void)   //115200bps@11.0592MHz
+ 427          //{
+ 428          //  SCON = 0x50;    //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 429          //  AUXR &= 0xBF;   //¶¨Ê±Æ÷1Ê±ÖÓÎªFosc/12,¼´12T
+ 430          //  AUXR &= 0xFE;   //´®¿Ú1Ñ¡Ôñ¶¨Ê±Æ÷1Îª²¨ÌØÂÊ·¢ÉúÆ÷
+ 431          //  TMOD &= 0x0F;   //Éè¶¨¶¨Ê±Æ÷1Îª16Î»×Ô¶¯ÖØ×°·½Ê½
+ 432          //  TL1 = 0xFE;   //Éè¶¨¶¨Ê±³õÖµ
+ 433          //  TH1 = 0xFF;   //Éè¶¨¶¨Ê±³õÖµ
+ 434          //  ET1 = 0;    //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï
+ 435          //  TR1 = 1;    //Æô¶¯¶¨Ê±Æ÷1
+ 436          ////´®¿Ú2,9600
+ 437          //  S2CON = 0x50;   //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 438          //  AUXR |= 0x04;   //¶¨Ê±Æ÷2Ê±ÖÓÎªFosc,¼´1T
+ 439          //  T2L = 0xE8;   //Éè¶¨¶¨Ê±³õÖµ
+ 440          //  T2H = 0xFE;   //Éè¶¨¶¨Ê±³õÖµ
+ 441          //  AUXR |= 0x10;   //Æô¶¯¶¨Ê±Æ÷2
+ 442          //}
+ 443          
+ 444          //////
+ 445          void Timer0Init(void)   //10ºÁÃë@11.0592MHz
+ 446          {
+ 447   1        AUXR &= 0x7F;   //¶¨Ê±Æ÷Ê±ÖÓ12TÄ£Ê½
+ 448   1        TMOD &= 0xF0;   //ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½
+ 449   1        TL0 = 0x00;   //ÉèÖÃ¶¨Ê±³õÖµ
+ 450   1        TH0 = 0xDC;   //ÉèÖÃ¶¨Ê±³õÖµ
+ 451   1        TF0 = 0;    //Çå³ýTF0±êÖ¾
+ 452   1        TR0 = 1;    //¶¨Ê±Æ÷0¿ªÊ¼¼ÆÊ±
+ 453   1      }
+ 454          
+ 455          
+ 456          /***********************************************************
+ 457          º¯ Êý Ãû: SendCommand
+ 458          º¯Êý¹¦ÄÜ: Ïò´®¿Ú2·¢ËÍÒ»ÌõÃüÁî
+ 459          Èë¿Ú²ÎÊý: command  ´æ·ÅÃüÁîµÄÖ¸Õë
+ 460                stat  ÃüÁîÖ´ÐÐÍêºóÊÇ·ñÒªÇå³ý½ÓÊÕ»º´æ
+ 461          ·µ»Ø²ÎÊý: ÃüÁîµÄÖ´ÐÐ½á¹û
+ 462          ***********************************************************/
+ 463          uchar SendCommand(unsigned char *command, bit stat)
+ 464          {
+ 465   1        uchar Result = FALSE;
+ 466   1        uchar LoopCount = 0;          //Ñ­»··¢ËÍµÄ´ÎÊý
+ 467   1        ClearRecBuff();               //ÇåÁã½ÓÊÕµÄ»º´æ
+ 468   1        Send_String2( command );
+ 469   1        RecFinish2 = FALSE;
+ 470   1        //DelayTimeCounter1 = 100;    //ÑÓÊ±20S,µÈ´ýÃüÁîÊÇ·ñÓÐÏìÓ¦
+ 471   1        DelayTimeCounter1 = 2000;
+ 472   1        delayms(200);
+ 473   1        while(LoopCount < 2)
+ 474   1        {
+ 475   2          WDT_CONTR = 0x3E;      //feed dog
+ 476   2      
+ 477   2          if(RecFinish2 || (DelayTimeCounter1 == 0))  //±íÊ¾ÒÑ¾­½ÓÊÕÍêÊý¾Ý»òÑÓÊ±Ê±¼äµ½
+ 478   2          {
+ 479   3            RecFinish2 = FALSE;
+ 480   3      //      //½ÓÊÕÊý¾Ýºó£¬Ê¹ÓÃ´®¿Ú1×ª·¢µ½µçÄÔ,ÓÃÓÚµ÷ÊÔ
+ 481   3      //      if(recv_data[0]!='\0'){       
+ 482   3      //        Send_String("-----");
+ 483   3      //        Send_String(recv_data);
+ 484   3      //        Send_String("-----\r\n");
+ 485   3      //      }
+ 486   3      
+ 487   3            if(strstr(recv_data,"OK") != NULL)        //±íÊ¾OK,Êý¾Ý·µ»ØÕýÈ·
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 9   
+
+ 488   3            {
+ 489   4      //        Send_String("getOk\r\n");
+ 490   4              Result = TRUE;
+ 491   4              break;
+ 492   4            }           
+ 493   3      
+ 494   3            else if(DelayTimeCounter1 == 0)           //µ½´ïÑÓÊ±ÏÞ¶¨µÄÊ±¼ä,ÖØÐÂ·¢ËÍÖ¸Áî
+ 495   3            {
+ 496   4              ClearRecBuff();                         //ÇåÁã½ÓÊÕµÄ»º´æ
+ 497   4              Send_String2(command); 
+ 498   4              DelayTimeCounter1 = 2000;
+ 499   4              LoopCount ++;
+ 500   4            }           
+ 501   3      //      if(LoopCount >= 2 )
+ 502   3      //      {
+ 503   3      ////        Send_String("LoopCount>=2,error");
+ 504   3      //        //ClearRecBuff();     //062409×¢ÊÍ
+ 505   3      //      }
+ 506   3          }
+ 507   2        }
+ 508   1        RecFinish2 = FALSE;
+ 509   1        if(stat == CL_REC_BUF)      //±íÊ¾ÒªÇåÁã½ÓÊÕµÄ»º³å
+ 510   1          ClearRecBuff();       //ÇåÁã½ÓÊÕµÄ»º´æ     
+ 511   1        return Result;  
+ 512   1      }
+ 513          /********************************************************
+ 514          º¯ Êý Ãû£ºInitGprs
+ 515          º¯Êý¹¦ÄÜ£º³õÊ¼»¯GPRSÄ£¿é
+ 516          Èë¿Ú²ÎÊý£ºÎÞ
+ 517          ·µ »Ø Öµ£º³õÊ¼»¯ÊÇ·ñ³É¹¦
+ 518          ********************************************************/
+ 519          int InitGprs()
+ 520          { 
+ 521   1        uchar result = FALSE;
+ 522   1        uchar i = 0;
+ 523   1        uchar icc_H=0x00;
+ 524   1        uchar icc_L=0x00;
+ 525   1      //  Send_String(" **Before start** ");      //ÏòµçÄÔ¶Ë·¢ËÍµ÷ÊÔÐÅÏ¢
+ 526   1        //DelayMin(LoopTimes%5);//
+ 527   1      START:
+ 528   1        DelayMin(LoopTimes%5);//
+ 529   1        LoopTimes++;
+ 530   1        if(LoopTimes >= 5)
+ 531   1        { 
+ 532   2          LoopTimes = 0;
+ 533   2          IAP_CONTR |= 0x20;    //ÖØÆô
+ 534   2        }
+ 535   1      
+ 536   1        result = SendCommand("AT\r\n",CL_REC_BUF);            //×ÔÊÊÓ¦²¨ÌØÂÊ
+ 537   1        
+ 538   1        result = SendCommand("AT\r\n",CL_REC_BUF);
+ 539   1        if( result )
+ 540   1        {
+ 541   2          result = SendCommand("AT+IPR=9600\r\n",CL_REC_BUF);   //ÉèÖÃ¹Ì¶¨²¨ÌØÂÊ9600
+ 542   2        }
+ 543   1        delayms(100);
+ 544   1        if( result )
+ 545   1        {   
+ 546   2          result = SendCommand("AT&W\r\n",CL_REC_BUF);  
+ 547   2        }
+ 548   1        delayms(100);
+ 549   1        if( result )
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 10  
+
+ 550   1        {
+ 551   2          result = SendCommand("AT+QIHEAD=0\r\n",CL_REC_BUF);     //Ôö¼ÓÍ·²¿ÐÅÏ¢  
+ 552   2        }
+ 553   1        delayms(100);
+ 554   1        //-----------------------------------------------------------------------------------------------
+ 555   1        if( result )
+ 556   1        { 
+ 557   2          while( (result = SendCommand("AT+CPIN?\r\n",CL_REC_BUF)) == FALSE ) //²éÑ¯sim¿¨×´Ì¬£¬ÓÐok³É¹¦
+ 558   2          {
+ 559   3             CheckSimTimes++; 
+ 560   3             if( CheckSimTimes >= 5)                    //10sÖÓÎ´¶Áµ½sim¿¨ÔòÖØÆô
+ 561   3             {
+ 562   4              CheckSimTimes = 0;
+ 563   4              goto START;   //ÖØÐÂ³õÊ¼»¯
+ 564   4             }
+ 565   3          }                           
+ 566   2        }
+ 567   1        delayms(100);
+ 568   1      
+ 569   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 570   1        //20171017Start-Ôö¼Ó-·¢ËÍICCIDÂë
+ 571   1        if(result)
+ 572   1        {
+ 573   2        CheckSimTimes=0;
+ 574   2        while( 1 )   
+ 575   2          {
+ 576   3            if( SendCommand("AT+QCCID\r\n",NO_CL_REC_BUF) == FALSE )  //²éÑ¯SIM¿¨µÄICCIDÂë£¬30ÃëÄÚ²éÑ¯Ê§°Ü£¬Ç¿ÖÆÏÂÒ
+             -»²½
+ 577   3            {
+ 578   4              CheckSimTimes++;
+ 579   4              if( CheckSimTimes >= 3 )
+ 580   4              {
+ 581   5                CheckSimTimes = 0;
+ 582   5                break;
+ 583   5              }
+ 584   4            }
+ 585   3            else
+ 586   3            {
+ 587   4              for(i = 0;i<20 ;i++)
+ 588   4              {
+ 589   5                //iccid2[i]=recv_data[i+11];
+ 590   5                iccid[i+5]=recv_data[i+11];                           //recv_data´ÓµÚ12Î»¿ªÊ¼ÊÇiccidÂë    
+ 591   5              }
+ 592   4      //        for(i = 0; i<20;i++)      //ÏÈÈ¡³ö²¢´ÓASCII×ªÎª±ê×¼µÄÊýÖµ
+ 593   4      //            {
+ 594   4      //              if(iccid[i+5]>=48 && iccid[i+5] <= 57)          //½«0-9ºÍA-FµÄ×Ö·û×ª³ÉÊýÖµ
+ 595   4      //                iccid[5+i] = iccid[5+i]-48;
+ 596   4      //              else if(iccid[i+5]>=65 && iccid[i+5]<= 70)
+ 597   4      //                iccid[5+i] = iccid[i+5]-55;
+ 598   4      //            }
+ 599   4      //        for(i = 0;i<10 ;i++)
+ 600   4      //        {
+ 601   4      //          icc_H=iccid[5+2*i]<<4;
+ 602   4      //          icc_L=iccid[6+2*i];
+ 603   4      //          iccid_bak[i]=icc_H+icc_L;
+ 604   4      //          //iccid_bak[i]=(((iccid[5+2*i])<<4)+(iccid[5+2*i+1])&0x0F);                           //recv_data´ÓµÚ12Î»¿ªÊ¼ÊÇi
+             -ccidÂë    
+ 605   4      //        }
+ 606   4              iccid[25]='\0';
+ 607   4      //      iccid_bak[11]='\0';
+ 608   4      //      Send_String(iccid);
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 11  
+
+ 609   4              ClearRecBuff();
+ 610   4              break;
+ 611   4            }
+ 612   3          } 
+ 613   2          
+ 614   2        }
+ 615   1        //20171017End
+ 616   1        
+ 617   1        if( result )
+ 618   1        {
+ 619   2          while( 1 )   
+ 620   2          {
+ 621   3            if( (result = SendCommand("AT+CREG?\r\n",CL_REC_BUF)) == FALSE )   //²éÑ¯GSMÍøÂç×´Ì¬£¬30ÃëÄÚGSM×¢²áÊ§°Ü¾
+             -ÍÖØÆô
+ 622   3            {
+ 623   4              CheckGsmTimes++;
+ 624   4              if( CheckGsmTimes >= 6 )
+ 625   4              {
+ 626   5                CheckGsmTimes = 0;        
+ 627   5                goto START;   //ÖØÐÂ³õÊ¼»¯
+ 628   5              }
+ 629   4            }
+ 630   3            else
+ 631   3            {
+ 632   4              if( strstr(recv_data,"+CREG: 0,0") != NULL )  //Ã»ÓÐ×¢²á³É¹¦£¬+CREG: 0,1-5³É¹¦
+ 633   4              {
+ 634   5                CheckGsmTimes++;
+ 635   5                if( CheckGsmTimes >= 6 )
+ 636   5                {           
+ 637   6                  CheckGsmTimes = 0;
+ 638   6                  goto START; //ÖØÐÂ³õÊ¼»¯
+ 639   6                }
+ 640   5                else
+ 641   5                  continue;
+ 642   5              }
+ 643   4              else
+ 644   4              {
+ 645   5                break;
+ 646   5              }
+ 647   4            }
+ 648   3          }
+ 649   2        }
+ 650   1        delayms(100);
+ 651   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 652   1        if( result )
+ 653   1        {
+ 654   2          while( 1 )   
+ 655   2          {
+ 656   3            if( SendCommand("AT+CGREG?\r\n",CL_REC_BUF) == FALSE )  //²éÑ¯GPRSÍøÂç×´Ì¬£¬30ÃëÄÚ²éÑ¯Ê§°Ü£¬Ç¿ÖÆÏÂÒ»²½
+ 657   3            {
+ 658   4              CheckGsmTimes++;
+ 659   4              if( CheckGsmTimes >= 6 )
+ 660   4              {
+ 661   5                CheckGsmTimes = 0;
+ 662   5                break;
+ 663   5              }
+ 664   4            }
+ 665   3            else
+ 666   3            {
+ 667   4              if( strstr(recv_data,"+CGREG: 0,0") != NULL )   //Ã»ÓÐ²éÑ¯³É¹¦,+CGREG: 0,1-5³É¹¦
+ 668   4              {
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 12  
+
+ 669   5                CheckGsmTimes++;
+ 670   5                if( CheckGsmTimes >= 6 )
+ 671   5                {
+ 672   6                  CheckGsmTimes = 0;
+ 673   6                  break;
+ 674   6                }
+ 675   5              }
+ 676   4              else
+ 677   4              {
+ 678   5                break;
+ 679   5              } 
+ 680   4            }
+ 681   3          }
+ 682   2        }
+ 683   1        delayms(20);
+ 684   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 685   1        if( result )
+ 686   1        {
+ 687   2          result = SendCommand("AT+QIFGCNT=0\r\n",CL_REC_BUF);      //½«context0ÉèÎªÇ°Ì¨context
+ 688   2        }
+ 689   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 690   1        if( result )
+ 691   1        {
+ 692   2          result = SendCommand("AT+QICSGP=1,\"CMNET\"\r\n",CL_REC_BUF);   //ÉèÖÃGPRSµÄAPN,ÒÆ¶¯ÁªÍ¨¿¨¿É²»ÓÃ  
+ 693   2        }
+ 694   1        delayms(20);
+ 695   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 696   1        if( result )
+ 697   1        {
+ 698   2          while( 1 ) 
+ 699   2          {
+ 700   3            if( (result = SendCommand("AT+QIREGAPP\r\n",NO_CL_REC_BUF)) == FALSE )    //Æô¶¯ÈÎÎñ£¬180sÎ´ÊÕµ½·µ»ØokÔò
+             -ÖØÆô
+ 701   3            {
+ 702   4              StartTaskTimes++;
+ 703   4              if( StartTaskTimes >= 12 )  //24s£¬ÕâÀïÉèÖÃÎª24Ãë£¬ÒÔ¼Ó¿ìËÙ¶È
+ 704   4              {
+ 705   5                StartTaskTimes = 0;
+ 706   5                SendCommand("AT+QIDEACT\r\n",CL_REC_BUF);       
+ 707   5                goto START;       //ÖØÐÂ³õÊ¼»¯
+ 708   5              }
+ 709   4            }
+ 710   3            else
+ 711   3            {
+ 712   4              //SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);   //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+ 713   4              //delayms(300);     
+ 714   4      //      Send_String("REGAPP-OK-STAT-");
+ 715   4              break;
+ 716   4            }
+ 717   3          }
+ 718   2        }
+ 719   1        delayms(200);
+ 720   1        //ÑÓÊ±,¾­³£Á¬½ÓGPRSÊ§°Ü----------------------------------------------------------------------------------
+             -----------------------------------
+ 721   1        if( result )
+ 722   1        {
+ 723   2          while( 1 ) 
+ 724   2          {
+ 725   3            if( (result = SendCommand("AT+QIACT\r\n",CL_REC_BUF)) == FALSE )//¼¤»îÒÆ¶¯³¡¾°»ò·¢ÆðgprsÎÞÏßÁ¬½Ó£¬3´ÎÊ§
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 13  
+
+             -°ÜÔòÖØÆô
+ 726   3            {
+ 727   4              ActivateTaskTimes++;
+ 728   4              delayms(1000);
+ 729   4              if( ActivateTaskTimes >= 2&& ActivateTaskTimes <4)          //2´ÎÊ§°ÜÔò³¢ÊÔ¹Ø±ÕACT£¬²¢ÖØÐÂ¼¤»îREGAPP¡£ÕâÖÖ
+             -·½·¨³É¹¦ÂÊ½Ï¸ß
+ 730   4              {
+ 731   5                //ActivateTaskTimes = 0;
+ 732   5                SendCommand("AT+QIDEACT\r\n",NO_CL_REC_BUF);
+ 733   5                delayms(1000);
+ 734   5                delayms(1000);
+ 735   5                WDT_CONTR = 0x3E;
+ 736   5                delayms(1000);
+ 737   5                delayms(1000);
+ 738   5                delayms(1000);
+ 739   5                WDT_CONTR = 0x3E;
+ 740   5                SendCommand("AT+QIREGAPP\r\n",NO_CL_REC_BUF);
+ 741   5                delayms(1000);
+ 742   5                delayms(1000);
+ 743   5      //          Send_String("--try -DEACT-RegAPP--");
+ 744   5                //goto START;   //ÖØÐÂ³õÊ¼»¯
+ 745   5              }
+ 746   4              else if( ActivateTaskTimes >= 4 ) 
+ 747   4              {
+ 748   5                ActivateTaskTimes = 0;
+ 749   5                goto START;   //ÖØÐÂ³õÊ¼
+ 750   5              }
+ 751   4            }
+ 752   3            else
+ 753   3            {
+ 754   4      //        Send_String("---QIACT-OK---");
+ 755   4              break;
+ 756   4            }
+ 757   3          }
+ 758   2        }
+ 759   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 760   1        if( result )
+ 761   1        {
+ 762   2          while(1)
+ 763   2          {
+ 764   3            ClearRecBuff();
+ 765   3            
+ 766   3            Send_String2("AT+QILOCIP\r\n");       //»ñÈ¡±¾µØipµØÖ·
+ 767   3            //SendCommand("AT+QILOCIP\r\n",NO_CL_REC_BUF);  //·¢ËÍÃüÁîºó²»Çå¿Õ½ÓÊÕÇø£¬·ñÔòÏÂÃæ²»ÄÜÌø³öÑ­»·
+ 768   3            delayms(1000);
+ 769   3            delayms(1000);
+ 770   3            RecFinish = FALSE;
+ 771   3            WDT_CONTR = 0x3E;
+ 772   3      //      Send_String(recv_data);           //»ØÏÔ»ñÈ¡IPµÄ½á¹û
+ 773   3            if( strstr(recv_data,"AT+QILOCIP") != NULL ) //·µ»Ø³É¹¦
+ 774   3            {
+ 775   4              ClearRecBuff();
+ 776   4              break;
+ 777   4            }
+ 778   3            else
+ 779   3            {
+ 780   4              InquryIpTimes++;
+ 781   4              if( strstr(recv_data,"10.") != NULL )       //¿ÉÉ¾³ý£¬Ò»°ã»ñÈ¡µÄIPÎª10¿ªÍ·£¬ÖØ¸´ÑéÖ¤ÊÇ·ñ»ñÈ¡³É¹¦
+ 782   4              {
+ 783   5                  break;
+ 784   5              }
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 14  
+
+ 785   4              if( InquryIpTimes >= 5)         //²éÑ¯5´Î
+ 786   4              {       
+ 787   5                InquryIpTimes = 0;
+ 788   5                if(SendCommand("AT+QIDEACT\r\n",CL_REC_BUF)) //¹Ø±ÕGPRS³¡¾°
+ 789   5                  goto START;           //ÖØÐÂ¿ªGPRS
+ 790   5                else
+ 791   5                  goto START;
+ 792   5              }
+ 793   4            }
+ 794   3          }
+ 795   2        }
+ 796   1          if( result )
+ 797   1        {
+ 798   2         if(IPMODE==1) result = SendCommand("AT+QIDNSIP=0\r\n",CL_REC_BUF);     //ÉèÖÃÁ¬½Ó·½Ê½£¬AT+QIDNSIP = 1ÎªÓòÃ
+             -ûÁ¬½Ó£¬0ÎªIPÁ¬½Ó
+ 799   2            else result = SendCommand("AT+QIDNSIP=1\r\n",CL_REC_BUF);           //ÉèÖÃÁ¬½Ó·½Ê½£¬1ÎªÓòÃûÁ¬½Ó£¬0ÎªIPÁ¬½Ó
+ 800   2        }
+ 801   1        delayms(200);
+ 802   1          if( result )
+ 803   1        {
+ 804   2          result = SendCommand("AT+QSCLK=0\r\n",CL_REC_BUF);      //¹Ø±ÕË¯ÃßÄ£Ê½
+ 805   2        }
+ 806   1        delayms(200);
+ 807   1          if( result )
+ 808   1        {
+ 809   2          result = SendCommand("AT+QISDE=0\r\n",CL_REC_BUF);  //·¢ËÍÊý¾Ý²»»ØÏÔ
+ 810   2        }
+ 811   1        
+ 812   1        //-------------------------------------------------------------------------------------------------------
+             --------------
+ 813   1          return result;
+ 814   1      }
+ 815          
+ 816          
+ 817          
+ 818          /********************************************************
+ 819          º¯ Êý Ãû£ºTCP_Connection
+ 820          º¯Êý¹¦ÄÜ£º½¨Á¢TCPÁ¬½Ó
+ 821          Èë¿Ú²ÎÊý£ºÎÞ//IPµØÖ·£¬Port¶Ë¿Ú
+ 822          ·µ »Ø Öµ£ºÁ¬½ÓÊÇ·ñ³É¹¦
+ 823          ********************************************************/
+ 824          uchar TCP_Connection()
+ 825          {
+ 826   1        uchar result = FALSE;
+ 827   1      
+ 828   1        while(1)
+ 829   1        {
+ 830   2          ClearRecBuff();
+ 831   2          //Send_String2("AT+QIOPEN=\"TCP\",\"111.144.112.93\",\"6003\"\r\n");      //IPÁ¬½Ó
+ 832   2           if(IPMODE==0)  Send_String2("AT+QIOPEN=\"TCP\",\"k1q7338645.iask.in\",\"30162\"\r\n");  //Ê¹ÓÃÓòÃû·þÎñÆ
+             -÷
+ 833   2          else Send_String2("AT+QIOPEN=\"TCP\",\"222.76.151.66\",\"6900\"\r\n");  //Ê¹ÓÃIP·þÎñÆ÷
+ 834   2          delayms(1000);
+ 835   2          delayms(1000);
+ 836   2              
+ 837   2          RecFinish = FALSE;
+ 838   2          WDT_CONTR = 0x3E;
+ 839   2          if( strstr(recv_data,"CONNECT OK") != NULL )
+ 840   2          {
+ 841   3            Send_String("CONNECT OK\r\n");
+ 842   3            //ÏòÖ÷°å·¢ËÍÔ­Ê¼µÄICCIDÂë
+ 843   3            Send_String_Len(iccid,25);
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 15  
+
+ 844   3            //Send_String("\r\n");
+ 845   3            //Send_String_Len(iccid2,20);
+ 846   3            //Send_String("\r\n");
+ 847   3            //Send_String_Len(iccid_bak,10);
+ 848   3            ClearRecBuff();
+ 849   3            ConnectionTimes = 0;
+ 850   3            result = TRUE;
+ 851   3            break;
+ 852   3          }
+ 853   2          //´íÎó´¦Àí
+ 854   2          else if( strstr(recv_data,"ERROR") != NULL )          //1 ERROR 
+ 855   2          {
+ 856   3            SendCommand("AT+QIMUX?\r\n",NO_CL_REC_BUF);
+ 857   3            delayms(200);
+ 858   3            SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);     //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+ 859   3            if( strstr(recv_data,"+QIMUX: 1") != NULL )
+ 860   3            {
+ 861   4              SendCommand("AT+QIMUX=0\r\n",CL_REC_BUF);   //ÉèÎªµ¥Á¬½Ó
+ 862   4              SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);     //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+ 863   4            }     
+ 864   3                    
+ 865   3            if(  strstr(recv_data,"IP INITAL") == NULL &&  strstr(recv_data,"IP STATUS") == NULL && strstr(recv_dat
+             -a,"IP CLOSE") == NULL )
+ 866   3            //
+ 867   3            {
+ 868   4              if( strstr(recv_data,"TCP CONNECTING") != NULL ) //TCPÁ¬½ÓÖÐ
+ 869   4              {
+ 870   5                SendCommand("AT+QICLOSE\r\n",CL_REC_BUF);   //¹Ø±Õµ±Ç°Á¬½Ó
+ 871   5              }
+ 872   4              else             //PDP DEACT
+ 873   4              {
+ 874   5                SendCommand("AT+QIDEACT\r\n",CL_REC_BUF);   //¹Ø±ÕGPRS³¡¾°
+ 875   5                delayms(1000);
+ 876   5                break;
+ 877   5              }
+ 878   4            }
+ 879   3          }
+ 880   2          else if( strstr(recv_data,"ALREADY CONNECT") != NULL )    //2 ALREADY CONNECT
+ 881   2          {
+ 882   3            SendCommand("AT+QICLOSE\r\n",CL_REC_BUF);       //¹Ø±Õµ±Ç°Á¬½Ó
+ 883   3          }
+ 884   2          else
+ 885   2          //------------------------------------------------------------------
+ 886   2          if( strstr(recv_data,"CONNECT FAIL") != NULL )      // CONNECT FAIL
+ 887   2          {
+ 888   3            if(  strstr(recv_data,"TCP CONNECTING") != NULL )
+ 889   3            {
+ 890   4              SendCommand("AT+QICLOSE\r\n",CL_REC_BUF);     //¹Ø±Õµ±Ç°Á¬½Ó
+ 891   4            }
+ 892   3            else
+ 893   3            {
+ 894   4              SendCommand("AT+QIDEACT\r\n",CL_REC_BUF);   //¹Ø±ÕGPRS³¡¾°
+ 895   4              delayms(1000);
+ 896   4              //break;
+ 897   4            }
+ 898   3          }
+ 899   2      
+ 900   2      
+ 901   2          //-----------------------------
+ 902   2          ConnectionTimes++;
+ 903   2          if( ConnectionTimes >= 5)               //ÖØÁ¬³¬¹ý5´Î»¹²»ÐÐ
+ 904   2          {
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 16  
+
+ 905   3            ConnectionTimes = 0;
+ 906   3            SendCommand("AT+QIDEACT\r\n",CL_REC_BUF);       //¹Ø±ÕGPRS³¡¾°
+ 907   3            break;  
+ 908   3          }
+ 909   2        }
+ 910   1        IsConnected = result;
+ 911   1        return result;  
+ 912   1      }
+ 913          
+ 914          /********************************************************
+ 915          º¯ Êý Ãû£ºTCP_SendData
+ 916          º¯Êý¹¦ÄÜ£ºÍ¨¹ýTCP·¢ËÍÊý¾Ý
+ 917          Èë¿Ú²ÎÊý£ºdata ·¢ËÍµÄÊý¾ÝÖ¸Õë
+ 918          ·µ »Ø Öµ£º·¢ËÍÊÇ·ñ³É¹¦
+ 919          ********************************************************/
+ 920          
+ 921          uchar TCP_SendData(uchar *Data,uint Len)// 
+ 922          {
+ 923   1        uchar result = TRUE;
+ 924   1        //1117£ºÔö¼Ó·¢ËÍiccidºó£¬³¤¶ÈÓÉ22Ôö¼ÓÎª32
+ 925   1        uchar senddata[32];   //µ¥¶À±£´æÐèÒª·¢ËÍµÄÊý¾Ý£¬±ÜÃâ±»ATÖ¸ÁîµÄÐÅÏ¢¸²¸Ç
+ 926   1        IsTcpSendFunc=1;
+ 927   1        for(count=0;count<Len;count++)
+ 928   1        {
+ 929   2          senddata[count]=Data[count];
+ 930   2        }
+ 931   1        senddata[Len]='\0';
+ 932   1        while(1)
+ 933   1        {
+ 934   2          
+ 935   2          RecFinish = FALSE;
+ 936   2          
+ 937   2          if(IsSendState==0)
+ 938   2         {      
+ 939   3           SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);                  //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+ 940   3           delayms(200);
+ 941   3          if( !((strstr(recv_data,"CONNECT OK") != NULL) || (strstr(recv_data,"TCP CONNECTING") != NULL)) ) //Ã»ÓÐ
+             -Á¬½Ó£¬³¢ÊÔÁ¬½Ó
+ 942   3          {   
+ 943   4            while(1)      //Á¬½ÓÊ§°Ü£¬ÔÙ´Î³õÊ¼»¯
+ 944   4            { 
+ 945   5              if( TCP_Connection() == FALSE )
+ 946   5              {
+ 947   6                InitGprs();
+ 948   6              }
+ 949   5              else
+ 950   5              {
+ 951   6                LoopTimes = 0;
+ 952   6                break;
+ 953   6              }
+ 954   5            }
+ 955   4            SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);                   //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+ 956   4          } 
+ 957   3         }
+ 958   2          //µ±Ç°Á¬½Ó³É¹¦
+ 959   2          delayms(200);
+ 960   2          if( (strstr(recv_data,"CONNECT OK") != NULL) || (strstr(recv_data,"TCP CONNECTING") != NULL) )
+ 961   2          {
+ 962   3            if(IsSendState==0){       
+ 963   4              if(Len == 21)   Send_String2("AT+QISEND=21\r\n");           //·¢ËÍ¶¨³¤Êý¾Ý
+ 964   4              else if(Len == 8) Send_String2("AT+QISEND=8\r\n");          //·¢ËÍÐÄÌø°ü
+ 965   4              else if(Len == 31) Send_String2("AT+QISEND=31\r\n");        //·¢ËÍ×¢²áÐÅÏ¢
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 17  
+
+ 966   4              else 
+ 967   4              {
+ 968   5                result = FALSE;
+ 969   5                break;                                      //Èç¹û²»ÊÇÕý³£Êý¾Ý»òÕßÐÄÌø°ü£¬ÔòÅ×Æú
+ 970   5              }
+ 971   4              delayms(300);
+ 972   4              IsSendState=1;                                //±êÖ¾Îª1£¬²»ÔÙ·¢ËÍATÖ¸Áî
+ 973   4            }
+ 974   3            if( strstr(recv_data,">")!= NULL )              //¿ªÊ¼½ÓÊÜ·¢ËÍÊý¾Ý
+ 975   3            {
+ 976   4              //-------------------------
+ 977   4              Send_String2_Len(senddata,Len);
+ 978   4              IsSendState=0;        
+ 979   4              delayms(300);             //
+ 980   4              if( strstr(recv_data,"SEND OK") != NULL )
+ 981   4              {
+ 982   5                ResponseFlag = 1;
+ 983   5                ClearRecBuff();
+ 984   5                break;
+ 985   5              }
+ 986   4              else break;
+ 987   4      //        else  //·ñÔò£¬²é¿´Êý¾ÝÊÇ·ñ·¢ËÍ³É¹¦
+ 988   4      //        {
+ 989   4      //          if( Query_Send_Success() == TRUE )
+ 990   4      //          {
+ 991   4      //            SendDataTimes = 0;
+ 992   4      //            break;
+ 993   4      //          }
+ 994   4      //        }
+ 995   4            }
+ 996   3          }
+ 997   2          //Á¬½Ó²»³É¹¦ | Êý¾ÝÎ´·¢ËÍ³É¹¦
+ 998   2          else {
+ 999   3            SendDataTimes++;
+1000   3            if( SendDataTimes >= 2 )
+1001   3            { 
+1002   4              SendDataTimes = 0;
+1003   4              result = FALSE;
+1004   4              IsSendState=0;
+1005   4              break;
+1006   4            }
+1007   3          }
+1008   2        }
+1009   1        IsTcpSendFunc=0;
+1010   1        return result;
+1011   1      }
+1012          
+1013          
+1014          //void SendPing()
+1015          //{
+1016          //  uchar ret = FALSE;
+1017          //  SendCommand("AT+QISTAT\r\n",NO_CL_REC_BUF);   //²éÑ¯µ±Ç°Á¬½Ó×´Ì¬
+1018          ////  Send_String("Ping inqury ");
+1019          ////  Send_String(recv_data);
+1020          
+1021          //  if( strstr(recv_data,"IP CLOSE") != NULL || strstr(recv_data,"IP STATUS") != NULL)    //Á¬½Ó¶Ï¿ªÁË
+1022          //  { 
+1023          ////    Send_String("^^deact,try_reconnect^^\r\n");
+1024          //    TCP_Connection();     //³¢ÊÔÖØÐÂÁ¬½Ó
+1025          //  }
+1026          //  else //·ñÔò£¬·¢ËÍÐÄÌøÊý¾Ý
+1027          //  {
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 18  
+
+1028          //    ClearRecBuff();
+1029          //    Send_String2("AT+QISEND=4\r\n");          //·¢ËÍ¶¨³¤Êý¾Ý
+1030          //    delayms(200);
+1031          //    //Send_String2("ping");
+1032          //    Send_String2(ping);
+1033          //    delayms(200);
+1034          //    if(strstr(recv_data,"SEND OK") != NULL)
+1035          //    {
+1036          //      ret=TRUE;
+1037          //      ClearRecBuff();
+1038          //    }
+1039          //      else ret = FALSE;
+1040          //    if(ret == FALSE)
+1041          //    {
+1042          //      PingNormal--;
+1043          //      //Send_String("Send_Ping_Error,wait_next_time\r\n");
+1044          //      if( PingNormal == 0)
+1045          //      {
+1046          //        PingNormal = 5;
+1047          //        SendCommand("AT+QICLOSE\r\n",CL_REC_BUF);   //¹Ø±Õµ±Ç°Á¬½Ó  IAP_CONTR |= 0x20;//ÖØÆô
+1048          //      if(IPMODE==0)   Send_String2("AT+QIOPEN=\"TCP\",\"k1q7338645.iask.in\",\"30162\"\r\n");  //Ê¹ÓÃÓòÃû·þÎ
+             -ñÆ÷
+1049          //      else Send_String2("AT+QIOPEN=\"TCP\",\"222.76.151.66\",\"6900\"\r\n");  //Ê¹ÓÃIP·þÎñÆ÷
+1050          ////        Send_String("Send_Ping_Failed_5times,try_reconnect_TCP \r\n");
+1051          //      }
+1052          //    }
+1053          //    else
+1054          //    {
+1055          //        PingNormal = 5;
+1056          ////      Send_String("Send_Ping_Success \r\n");
+1057          //    }
+1058          //  }
+1059          //}
+1060          
+1061            ////////////////////////
+1062          void security(void)
+1063           {    uint temp16;
+1064   1              uchar i;
+1065   1          for (i=0;i<7;i++)
+1066   1           {
+1067   2           temp16=origin[i]*bbp[i]+origin[i];
+1068   2             SecuValue[i] =(uchar)temp16;
+1069   2           SecuValue[i]=SecuValue[i]^birthp[i];
+1070   2           }
+1071   1       }
+1072          void read_password(void)
+1073          {
+1074   1        uchar i;
+1075   1        for(i=0;i<7;i++)
+1076   1        {
+1077   2         password[i]=EEPROM_read_byte(PASEE+i);
+1078   2        }
+1079   1      }
+1080          
+1081          void take_code(void)
+1082          {
+1083   1         //uchar idata *idata_point;
+1084   1         uchar code *idata_point;
+1085   1         uchar data i,tempp[7];
+1086   1      
+1087   1         idata_point = 0x1ff9;
+1088   1         for(i=0;i<7;i++)
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 19  
+
+1089   1         {
+1090   2           tempp[i] = *idata_point; 
+1091   2           origin[i] = tempp[i];
+1092   2           idata_point++;
+1093   2         }
+1094   1      }
+1095          
+1096          ////////////////
+1097          void main(void)
+1098          {
+1099   1        
+1100   1        P2M1=0;
+1101   1        P2M0=0x80;
+1102   1        P5M1=0;
+1103   1        P5M0=0x10;
+1104   1        LED=1;
+1105   1        POWER=0;
+1106   1        take_code(); //
+1107   1        security();
+1108   1        read_password();
+1109   1        delayms(200);
+1110   1        
+1111   1        UartInit();
+1112   1        Timer0Init();
+1113   1        
+1114   1        //Æô¶¯M26Ä£¿é
+1115   1        RESET_M26=0;
+1116   1        
+1117   1        delayms(200); 
+1118   1        delayms(1000);    
+1119   1        RESET_M26=1;
+1120   1        
+1121   1        delayms(1000);      
+1122   1        delayms(1000);    
+1123   1        delayms(1000);  
+1124   1        
+1125   1        RESET_M26=0;  
+1126   1        ET0=1;
+1127   1        ES=1;
+1128   1        IE2  |= 1;//Æô¶¯´®¿Ú2 
+1129   1        EA=1;
+1130   1      //  Send_String_Len(password,7);
+1131   1        delayms(1000);  
+1132   1        delayms(1000); 
+1133   1        
+1134   1        //Send_String("____________programa start______________"); 
+1135   1        
+1136   1        if( InitGprs() == FALSE )
+1137   1        {
+1138   2          //Send_String(" ^^^ main restart ^^^ \r\n");
+1139   2          IAP_CONTR |= 0x20;//ÖØÆô
+1140   2        }
+1141   1        TCP_Connection();
+1142   1      //  iccid·ÅÔÚTCP_connectionÖÐ·¢ËÍ
+1143   1      //  Send_String(iccid);
+1144   1        
+1145   1        PingStart = 1;
+1146   1       while(1)
+1147   1       {   
+1148   2         WDT_CONTR=0x3e;
+1149   2         delayms(100);
+1150   2         //½«M26·µ»ØµÄÄÚÈÝ£¬Ê¹ÓÃ´®¿Ú1·¢ËÍµ½µçÄÔ
+C51 COMPILER V9.56.0.0   MAIN                                                              11/17/2017 14:01:16 PAGE 20  
+
+1151   2           if (RecFinish2==1) {Send_String_Len(RxBuf2,BlueSendCnt);BlueSendCnt=0; RecFinish2=0;IsRecFlag=1;}        
+1152   2      
+1153   2        //½«´®¿Ú1½ÓÊÕµÄÊý¾Ý×ª·¢µ½´®¿Ú2
+1154   2           if(MobilRECOK==1)                                 //µ±´®¿Ú1½ÓÊÕÍêÊý¾Ý£¬×ª·¢¸ø´®¿Ú2
+1155   2           {  
+1156   3             BlueGetCnt_old = BlueGetCnt;                    //¼ÇÂ¼µ±Ç°´®¿Ú1»º³åÇøµÄ´óÐ¡
+1157   3             //ÊÖ¶¯²¹³ä»»ÐÐ·û
+1158   3      //       temp[BlueGetCnt]='\r';
+1159   3      //       temp[BlueGetCnt+1]='\n';
+1160   3      //       temp[BlueGetCnt+2]='\0';      
+1161   3      //      if(temp[0]=='A'&&temp[1]=='T')                 //Ö§³ÖÊäÈëATÖ¸Áî£¬ÓÃÓÚµ÷ÊÔ
+1162   3      //       SendCommand(temp,1);
+1163   3      //      else 
+1164   3      
+1165   3             TCP_SendData(temp,BlueGetCnt_old);              //·ñÔò×÷ÎªÊý¾Ý×ª·¢
+1166   3      
+1167   3             delayms(200);
+1168   3             if(BlueGetCnt !=BlueGetCnt_old)                 //ÐÂ½øÈëÊý¾Ý£¬¶àÎªÐÄÌø°üºÍÊý¾ÝÔÚ½Ï¶Ì¼ä¸ôÄÚ½øÈë
+1169   3             {
+1170   4                TCP_SendData(temp+BlueGetCnt_old,BlueGetCnt-BlueGetCnt_old);
+1171   4             }
+1172   3             for( count=0;count<BlueGetCnt+1;count++){
+1173   4               temp[count]='\0';
+1174   4             }       
+1175   3      
+1176   3             BlueGetCnt=0;
+1177   3             MobilRECOK=0;        //´®¿Ú1½ÓÊÕÍê³É±êÖ¾
+1178   3           }     
+1179   2       }  //while
+1180   1      }//main
+*** WARNING C294 IN LINE 799 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2988    ----
+   CONSTANT SIZE    =    593    ----
+   XDATA SIZE       =    497    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     34      64
+   IDATA SIZE       =      4    ----
+   BIT SIZE         =      7       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

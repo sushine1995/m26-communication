@@ -1,0 +1,1361 @@
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 1   
+
+
+C51 COMPILER V8.08, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           /*
+   2           Ö÷cpu°üÀ¨cc1100ºÍ·ÖÎöÅÆ£¬À¶ÑÀ¡£ÓïÑÔ²¥±¨
+   3           ¸±cpu¸ÐÓ¦ÅÆ£¬·¢Êý¾Ý¸øÖ÷cpu
+   4           FE E1 11 20 8C 3A 6A 8B 47 93 68 44 8E 04 4A 96 69 0E 36 8A 09 3E 6F 17 37 5D 77 22 4F 89 91 8D 1D 90 1C 
+             -67 00 00 00 00 
+   5           FE E1 11 20 8C 3A 6A 8B 47 93 68 44 8E 04 4A 96 69 0E 36 8A 09 3E 6F 17 37 5D 77 22 4F 89 91 8D 1D 90 1C 
+             -67 00 00 00 00 
+   6           */
+   7          #include<varmain.h> 
+   8          //****************************************************8
+   9          uint crccheck(uchar *ptr, uchar len)       //CRCÐ£Ñé³ÌÐò
+  10          {
+  11   1      uchar uchCRCHi = 0xFF ;   /* high byte of CRC initialized */
+  12   1      uchar uchCRCLo = 0xFF ;   /* low byte of CRC initialized */
+  13   1      uchar uIndex ;            /* will index into CRC lookup table */
+  14   1      while (len--)                  /* pass through message buffer */
+  15   1      {
+  16   2      uIndex = uchCRCHi ^ *ptr++ ;   /* calculate the CRC */
+  17   2      uchCRCHi = uchCRCLo ^ auchCRCHi[uIndex] ;
+  18   2      uchCRCLo = auchCRCLo[uIndex] ;
+  19   2      }
+  20   1      return (uchCRCHi<<8|uchCRCLo) ;
+  21   1      }
+  22          //*****************************************************************************************
+  23          //º¯ÊýÃû£ºdelay(unsigned int s)
+  24          //ÊäÈë£ºÊ±¼ä
+  25          //Êä³ö£ºÎÞ
+  26          //¹¦ÄÜÃèÊö£ºÆÕÍ¨Í¢Ê±,ÄÚ²¿ÓÃ
+  27          //*****************************************************************************************  
+  28          static void delay(unsigned int s)
+  29          {
+  30   1      unsigned int i;
+  31   1      for(i=0; i<s; i++);
+  32   1      for(i=0; i<s; i++);
+  33   1      }
+  34          
+  35          void delayms(unsigned int k)
+  36          {
+  37   1              unsigned int i,j;
+  38   1              for(i = 0; i < k; i++)
+  39   1                      for(j = 0; j < 1000; j++)
+  40   1                      ;
+  41   1      }
+  42          /*-------------------------------------- ;
+  43          E0--EFµ÷½ÚÒôÁ¿
+  44          F3+ÓïÒô ²¥·Å
+  45          Ä£¿éÃû³Æ:Line_2A_WTN5(UC8 SB_DATA) ;
+  46          ¹¦ÄÜ:ÊµÏÖ¶þÏß´®¿ÚÍ¨ÐÅº¯Êý;
+  47          Èë²Î:SB_DATAÎª·¢ËÍÊý¾Ý;
+  48          ³ö²Î: ; 
+  49          CLK_2A //Ê±ÖÓÏß; 
+  50          £¬Ã¿·¢Ò»¸ö×Ö½ÚÊý¾Ý£¬Ê±ÖÓÐÅºÅCLKÀ­µÍ4msÖÁ40ms£¬
+  51          ÍÆ¼öÊ¹ÓÃ5msÒÔ»½ÐÑWTN5ÓïÒôÐ¾Æ¬£¬½ÓÊÕÊý¾ÝµÍÎ»ÔÚÏÈ£¬
+  52          ÔÚÊ±ÖÓµÄÉÏÉýÑØ½ÓÊÕÊý¾Ý¡£Ê±ÖÓÖÜÆÚ½éÓÚ200us¡«4msÖ®¼ä£¬
+  53          ÍÆ¼öÖÜÆÚÊ¹ÓÃ300us¡£·¢Êý¾ÝÊ±ÏÈ·¢µÍÎ»£¬ÔÙ·¢¸ßÎ»
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 2   
+
+  54          P_DATA_2A //Êý¾ÝÏß;-------------------------------------
+  55          */ 
+  56          void Line_2A_WTN5(uchar SB_DATA)
+  57           { 
+  58   1           uchar data  S_DATA,j;
+  59   1               bit bdata B_DATA;
+  60   1      
+  61   1               CLK_2A = 1; //Ê±ÖÓÏß
+  62   1               P_DATA_2A = 1; //Êý¾ÝÏß
+  63   1               S_DATA = SB_DATA; 
+  64   1               CLK_2A = 0; 
+  65   1               delayms(5); //ÑÓÊ±5ms 
+  66   1               B_DATA = S_DATA&0X01; 
+  67   1               for(j=0;j<8;j++) 
+  68   1               { 
+  69   2                       CLK_2A = 0; // À­µÍ
+  70   2                       P_DATA_2A = B_DATA; //´«ÊäÊý¾ÝÒ»Î»
+  71   2                       delay(30); //ÑÓÊ±300us 
+  72   2                       CLK_2A = 1; //À­¸ß
+  73   2                       delay(30); //ÑÓÊ±300us 
+  74   2                       S_DATA = S_DATA>>1; 
+  75   2                       B_DATA = S_DATA&0X01; 
+  76   2               } 
+  77   1               P_DATA_2A = 1; 
+  78   1               CLK_2A = 1; 
+  79   1       }
+  80          
+  81          void Send_byte(INT8U odata)
+  82          {
+  83   1       
+  84   1          //ES=0;
+  85   1          SBUF = odata;
+  86   1          while (!TI);
+  87   1          TI = 0;
+  88   1         // ES=1;
+  89   1      
+  90   1      }
+  91          
+  92          void Send_string(INT8U *buf_addr,INT8U length)
+  93          {
+  94   1          INT8U k;
+  95   1          for (k=0;k<length;k++)
+  96   1          {
+  97   2              Send_byte(*(buf_addr+k));
+  98   2          }
+  99   1      }
+ 100          void Send_byte2(INT8U odata)
+ 101          {
+ 102   1       
+ 103   1              S2BUF = odata;
+ 104   1          while(!(S2CON&0x02));
+ 105   1              S2CON = S2CON & 0xFD;
+ 106   1      
+ 107   1      }
+ 108          void Send_string2(INT8U *buf_addr,INT8U length)
+ 109          {
+ 110   1          INT8U k;
+ 111   1          for (k=0;k<length;k++)
+ 112   1          {
+ 113   2              Send_byte2(*(buf_addr+k));
+ 114   2          }
+ 115   1      }
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 3   
+
+ 116          void halWait(INT16U timeout) {
+ 117   1          do {
+ 118   2              _nop_();
+ 119   2        _nop_();
+ 120   2        _nop_();
+ 121   2        _nop_();
+ 122   2        _nop_();
+ 123   2        _nop_();
+ 124   2        _nop_();
+ 125   2        _nop_();
+ 126   2        _nop_();
+ 127   2        _nop_();
+ 128   2        _nop_();
+ 129   2        _nop_();
+ 130   2        _nop_();
+ 131   2        _nop_();
+ 132   2        _nop_();
+ 133   2          } while (--timeout);
+ 134   1      }
+ 135          
+ 136          void SpiInit(void)
+ 137          {
+ 138   1      CSN=0;
+ 139   1      SCK=0;
+ 140   1      CSN=1;
+ 141   1      }
+ 142          /*****************************************************************************************
+ 143          //º¯ÊýÃû£ºCpuInit()
+ 144          //ÊäÈë£ºÎÞ
+ 145          //Êä³ö£ºÎÞ
+ 146          //¹¦ÄÜÃèÊö£ºSPI³õÊ¼»¯³ÌÐò
+ 147          /*****************************************************************************************/
+ 148          void CpuInit(void)
+ 149          {
+ 150   1      SpiInit();
+ 151   1      delay(5000);
+ 152   1      }
+ 153          
+ 154          //*****************************************************************************************
+ 155          //º¯ÊýÃû£ºSpisendByte(INT8U dat)
+ 156          //ÊäÈë£º·¢ËÍµÄÊý¾Ý
+ 157          //Êä³ö£ºÎÞ
+ 158          //¹¦ÄÜÃèÊö£ºSPI·¢ËÍÒ»¸ö×Ö½Ú
+ 159          //*****************************************************************************************
+ 160          INT8U SpiTxRxByte(INT8U dat)
+ 161          {
+ 162   1      INT8U i,temp;
+ 163   1      temp = 0;
+ 164   1      
+ 165   1      SCK = 0;
+ 166   1      for(i=0; i<8; i++)
+ 167   1      {
+ 168   2        if(dat & 0x80)
+ 169   2        {
+ 170   3         MOSI = 1;
+ 171   3        }
+ 172   2        else MOSI = 0;
+ 173   2        dat <<= 1;
+ 174   2        SCK = 1;
+ 175   2        _nop_();
+ 176   2        _nop_();
+ 177   2        temp <<= 1;
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 4   
+
+ 178   2        if(MISO)temp++;
+ 179   2        SCK = 0;
+ 180   2        _nop_();
+ 181   2        _nop_(); 
+ 182   2      }
+ 183   1      return temp;
+ 184   1      }
+ 185          //*****************************************************************************************
+ 186          //º¯ÊýÃû£ºvoid RESET_CC1100(void)
+ 187          //ÊäÈë£ºÎÞ
+ 188          //Êä³ö£ºÎÞ
+ 189          //¹¦ÄÜÃèÊö£º¸´Î»CC1100
+ 190          //*****************************************************************************************
+ 191          void RESET_CC1100(void)
+ 192          {
+ 193   1      CSN = 0;
+ 194   1      while (MISO);
+ 195   1          SpiTxRxByte(CCxxx0_SRES);   //Ð´Èë¸´Î»ÃüÁî
+ 196   1      while (MISO);
+ 197   1          CSN = 1;
+ 198   1      }
+ 199          //*****************************************************************************************
+ 200          //º¯ÊýÃû£ºvoid POWER_UP_RESET_CC1100(void)
+ 201          //ÊäÈë£ºÎÞ
+ 202          //Êä³ö£ºÎÞ
+ 203          //¹¦ÄÜÃèÊö£ºÉÏµç¸´Î»CC1100
+ 204          //*****************************************************************************************
+ 205          void POWER_UP_RESET_CC1100(void)
+ 206          {
+ 207   1      CSN = 1;
+ 208   1      halWait(1);
+ 209   1      CSN = 0;
+ 210   1      halWait(1);
+ 211   1      CSN = 1;
+ 212   1      halWait(41);
+ 213   1      RESET_CC1100();     //¸´Î»CC1100
+ 214   1      }
+ 215          //*****************************************************************************************
+ 216          //º¯ÊýÃû£ºvoid halSpiWriteReg(INT8U addr, INT8U value)
+ 217          //ÊäÈë£ºµØÖ·ºÍÅäÖÃ×Ö
+ 218          //Êä³ö£ºÎÞ
+ 219          //¹¦ÄÜÃèÊö£ºSPIÐ´¼Ä´æÆ÷
+ 220          //*****************************************************************************************
+ 221          void halSpiWriteReg(INT8U addr, INT8U value)
+ 222          {
+ 223   1          CSN = 0;
+ 224   1          while (MISO);
+ 225   1          SpiTxRxByte(addr);  //Ð´µØÖ·
+ 226   1          SpiTxRxByte(value);  //Ð´ÈëÅäÖÃ
+ 227   1          CSN = 1;
+ 228   1      }
+ 229          //*****************************************************************************************
+ 230          //º¯ÊýÃû£ºvoid halSpiWriteBurstReg(INT8U addr, INT8U *buffer, INT8U count)
+ 231          //ÊäÈë£ºµØÖ·£¬Ð´Èë»º³åÇø£¬Ð´Èë¸öÊý
+ 232          //Êä³ö£ºÎÞ
+ 233          //¹¦ÄÜÃèÊö£ºSPIÁ¬ÐøÐ´ÅäÖÃ¼Ä´æÆ÷
+ 234          //*****************************************************************************************
+ 235          void halSpiWriteBurstReg(INT8U addr, INT8U *buffer, INT8U count)
+ 236          {
+ 237   1          INT8U i, temp;
+ 238   1          temp = addr | WRITE_BURST;
+ 239   1          CSN = 0;
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 5   
+
+ 240   1          while (MISO);
+ 241   1          SpiTxRxByte(temp);
+ 242   1          for (i = 0; i < count; i++)
+ 243   1        {
+ 244   2              SpiTxRxByte(buffer[i]);
+ 245   2          }
+ 246   1          CSN = 1;
+ 247   1      }
+ 248          //*****************************************************************************************
+ 249          //º¯ÊýÃû£ºvoid halSpiStrobe(INT8U strobe)
+ 250          //ÊäÈë£ºÃüÁî
+ 251          //Êä³ö£ºÎÞ
+ 252          //¹¦ÄÜÃèÊö£ºSPIÐ´ÃüÁî
+ 253          //*****************************************************************************************
+ 254          void halSpiStrobe(INT8U strobe)
+ 255          {
+ 256   1          CSN = 0;
+ 257   1          while (MISO);
+ 258   1          SpiTxRxByte(strobe);  //Ð´ÈëÃüÁî
+ 259   1          CSN = 1;
+ 260   1      }
+ 261          
+ 262          
+ 263          //*****************************************************************************************
+ 264          //º¯ÊýÃû£ºINT8U halSpiReadReg(INT8U addr)
+ 265          //ÊäÈë£ºµØÖ·
+ 266          //Êä³ö£º¸Ã¼Ä´æÆ÷µÄÅäÖÃ×Ö
+ 267          //¹¦ÄÜÃèÊö£ºSPI¶Á¼Ä´æÆ÷
+ 268          //*****************************************************************************************
+ 269          INT8U halSpiReadReg(INT8U addr)
+ 270          {
+ 271   1      INT8U temp, value;
+ 272   1          temp = addr|READ_SINGLE;//¶Á¼Ä´æÆ÷ÃüÁî
+ 273   1      CSN = 0;
+ 274   1      while (MISO);
+ 275   1      SpiTxRxByte(temp);
+ 276   1      value = SpiTxRxByte(0);
+ 277   1      CSN = 1;
+ 278   1      return value;
+ 279   1      }
+ 280          
+ 281          //*****************************************************************************************
+ 282          //º¯ÊýÃû£ºvoid halSpiReadBurstReg(INT8U addr, INT8U *buffer, INT8U count)
+ 283          //ÊäÈë£ºµØÖ·£¬¶Á³öÊý¾ÝºóÔÝ´æµÄ»º³åÇø£¬¶Á³öÅäÖÃ¸öÊý
+ 284          //Êä³ö£ºÎÞ
+ 285          //¹¦ÄÜÃèÊö£ºSPIÁ¬ÐøÐ´ÅäÖÃ¼Ä´æÆ÷
+ 286          //*****************************************************************************************
+ 287          void halSpiReadBurstReg(INT8U addr, INT8U *buffer, INT8U count)
+ 288          {
+ 289   1          INT8U i,temp;
+ 290   1      temp = addr | READ_BURST;  //Ð´ÈëÒª¶ÁµÄÅäÖÃ¼Ä´æÆ÷µØÖ·ºÍ¶ÁÃüÁî
+ 291   1          CSN = 0;
+ 292   1          while (MISO);
+ 293   1      SpiTxRxByte(temp);  
+ 294   1          for (i = 0; i < count; i++)
+ 295   1      {
+ 296   2              buffer[i] = SpiTxRxByte(0);
+ 297   2          }
+ 298   1          CSN = 1;
+ 299   1      }
+ 300          
+ 301          //*****************************************************************************************
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 6   
+
+ 302          //º¯ÊýÃû£ºINT8U halSpiReadReg(INT8U addr)
+ 303          //ÊäÈë£ºµØÖ·
+ 304          //Êä³ö£º¸Ã×´Ì¬¼Ä´æÆ÷µ±Ç°Öµ
+ 305          //¹¦ÄÜÃèÊö£ºSPI¶Á×´Ì¬¼Ä´æÆ÷
+ 306          //*****************************************************************************************
+ 307          INT8U halSpiReadStatus(INT8U addr)
+ 308          {
+ 309   1          INT8U value,temp;
+ 310   1      temp = addr | READ_BURST;  //Ð´ÈëÒª¶ÁµÄ×´Ì¬¼Ä´æÆ÷µÄµØÖ·Í¬Ê±Ð´Èë¶ÁÃüÁî
+ 311   1          CSN = 0;
+ 312   1          while (MISO);
+ 313   1          SpiTxRxByte(temp);
+ 314   1      value = SpiTxRxByte(0);
+ 315   1      CSN = 1;
+ 316   1      return value;
+ 317   1      }
+ 318          //*****************************************************************************************
+ 319          //º¯ÊýÃû£ºvoid halRfWriteRfSettings(RF_SETTINGS *pRfSettings)
+ 320          //ÊäÈë£ºÎÞ
+ 321          //Êä³ö£ºÎÞ
+ 322          //¹¦ÄÜÃèÊö£ºÅäÖÃCC1100µÄ¼Ä´æÆ÷
+ 323          //*****************************************************************************************
+ 324          void halRfWriteRfSettings(void)
+ 325          {
+ 326   1      halSpiWriteReg(CCxxx0_FSCTRL0,  rfSettings.FSCTRL2);//×ÔÒÑ¼ÓµÄ
+ 327   1          // Write register settings
+ 328   1          halSpiWriteReg(CCxxx0_FSCTRL1,  rfSettings.FSCTRL1);
+ 329   1          halSpiWriteReg(CCxxx0_FSCTRL0,  rfSettings.FSCTRL0);
+ 330   1          halSpiWriteReg(CCxxx0_FREQ2,    rfSettings.FREQ2);
+ 331   1          halSpiWriteReg(CCxxx0_FREQ1,    rfSettings.FREQ1);
+ 332   1          halSpiWriteReg(CCxxx0_FREQ0,    rfSettings.FREQ0);
+ 333   1          halSpiWriteReg(CCxxx0_MDMCFG4,  rfSettings.MDMCFG4);
+ 334   1          halSpiWriteReg(CCxxx0_MDMCFG3,  rfSettings.MDMCFG3);
+ 335   1          halSpiWriteReg(CCxxx0_MDMCFG2,  rfSettings.MDMCFG2);
+ 336   1          halSpiWriteReg(CCxxx0_MDMCFG1,  rfSettings.MDMCFG1);
+ 337   1          halSpiWriteReg(CCxxx0_MDMCFG0,  rfSettings.MDMCFG0);
+ 338   1          halSpiWriteReg(CCxxx0_CHANNR,   rfSettings.CHANNR);
+ 339   1          halSpiWriteReg(CCxxx0_DEVIATN,  rfSettings.DEVIATN);
+ 340   1          halSpiWriteReg(CCxxx0_FREND1,   rfSettings.FREND1);
+ 341   1          halSpiWriteReg(CCxxx0_FREND0,   rfSettings.FREND0);
+ 342   1          halSpiWriteReg(CCxxx0_MCSM0 ,   rfSettings.MCSM0 );
+ 343   1          halSpiWriteReg(CCxxx0_FOCCFG,   rfSettings.FOCCFG);
+ 344   1          halSpiWriteReg(CCxxx0_BSCFG,    rfSettings.BSCFG);
+ 345   1          halSpiWriteReg(CCxxx0_AGCCTRL2, rfSettings.AGCCTRL2);
+ 346   1          halSpiWriteReg(CCxxx0_AGCCTRL1, rfSettings.AGCCTRL1);
+ 347   1          halSpiWriteReg(CCxxx0_AGCCTRL0, rfSettings.AGCCTRL0);
+ 348   1          halSpiWriteReg(CCxxx0_FSCAL3,   rfSettings.FSCAL3);
+ 349   1          halSpiWriteReg(CCxxx0_FSCAL2,   rfSettings.FSCAL2);
+ 350   1          halSpiWriteReg(CCxxx0_FSCAL1,   rfSettings.FSCAL1);
+ 351   1          halSpiWriteReg(CCxxx0_FSCAL0,   rfSettings.FSCAL0);
+ 352   1          halSpiWriteReg(CCxxx0_FSTEST,   rfSettings.FSTEST);
+ 353   1          halSpiWriteReg(CCxxx0_TEST2,    rfSettings.TEST2);
+ 354   1          halSpiWriteReg(CCxxx0_TEST1,    rfSettings.TEST1);
+ 355   1          halSpiWriteReg(CCxxx0_TEST0,    rfSettings.TEST0);
+ 356   1          halSpiWriteReg(CCxxx0_IOCFG2,   rfSettings.IOCFG2);
+ 357   1          halSpiWriteReg(CCxxx0_IOCFG0,   rfSettings.IOCFG0);   
+ 358   1          halSpiWriteReg(CCxxx0_PKTCTRL1, rfSettings.PKTCTRL1);
+ 359   1          halSpiWriteReg(CCxxx0_PKTCTRL0, rfSettings.PKTCTRL0);
+ 360   1          halSpiWriteReg(CCxxx0_ADDR,     rfSettings.ADDR);
+ 361   1          halSpiWriteReg(CCxxx0_PKTLEN,   rfSettings.PKTLEN);
+ 362   1      }
+ 363          //*****************************************************************************************
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 7   
+
+ 364          //º¯ÊýÃû£ºvoid halRfSendPacket(INT8U *txBuffer, INT8U size)
+ 365          //ÊäÈë£º·¢ËÍµÄ»º³åÇø£¬·¢ËÍÊý¾Ý¸öÊý
+ 366          //Êä³ö£ºÎÞ
+ 367          //¹¦ÄÜÃèÊö£ºCC1100·¢ËÍÒ»×éÊý¾Ý
+ 368          //*****************************************************************************************
+ 369          void halRfSendPacket(INT8U *txBuffer, INT8U size)
+ 370          {
+ 371   1          halSpiWriteBurstReg(CCxxx0_PATABLE, PaTabel, 8);
+ 372   1              halSpiStrobe(CCxxx0_SIDLE);  
+ 373   1              halSpiStrobe(CCxxx0_SFTX); //Çå³ý·¢ËÍ»º³åÇøÊý¾Ý
+ 374   1          halSpiWriteReg(CCxxx0_TXFIFO, size);
+ 375   1          halSpiWriteBurstReg(CCxxx0_TXFIFO, txBuffer, size); //Ð´ÈëÒª·¢ËÍµÄÊý¾Ý
+ 376   1          halSpiStrobe(CCxxx0_STX);  //½øÈë·¢ËÍÄ£Ê½·¢ËÍÊý¾Ý
+ 377   1          // Wait for GDO0 to be set -> sync transmitted
+ 378   1          while (!GDO0);
+ 379   1          // Wait for GDO0 to be cleared -> end of packet
+ 380   1          while (GDO0);
+ 381   1      halSpiStrobe(CCxxx0_SFTX);        //Çå³ý·¢ËÍ»º³åÇøÊý¾Ý
+ 382   1      delay(1000);
+ 383   1      halSpiWriteBurstReg(CCxxx0_PATABLE, PaTabel0, 8);
+ 384   1      halSpiStrobe(CCxxx0_SIDLE); 
+ 385   1      halSpiStrobe(CCxxx0_SRX);  //½øÈë½ÓÊÕ×´Ì¬
+ 386   1      }
+ 387          
+ 388          void setRxMode(void)
+ 389          {
+ 390   1          halSpiStrobe(CCxxx0_SRX);  //½øÈë½ÓÊÕ×´Ì¬
+ 391   1      }
+ 392          /*
+ 393          // Bit masks corresponding to STATE[2:0] in the status byte returned on MISO
+ 394          #define CCxx00_STATE_BM                 0x70
+ 395          #define CCxx00_FIFO_BYTES_AVAILABLE_BM  0x0F
+ 396          #define CCxx00_STATE_TX_BM              0x20
+ 397          #define CCxx00_STATE_TX_UNDERFLOW_BM    0x70
+ 398          #define CCxx00_STATE_RX_BM              0x10
+ 399          #define CCxx00_STATE_RX_OVERFLOW_BM     0x60
+ 400          #define CCxx00_STATE_IDLE_BM            0x00
+ 401          static INT8U RfGetRxStatus(void)
+ 402          {
+ 403          INT8U temp, spiRxStatus1,spiRxStatus2;
+ 404          INT8U i=4;// Ñ­»·²âÊÔ´ÎÊý
+ 405              temp = CCxxx0_SNOP|READ_SINGLE;//¶Á¼Ä´æÆ÷ÃüÁî
+ 406          CSN = 0;
+ 407          while (MISO);
+ 408          SpiTxRxByte(temp);
+ 409          spiRxStatus1 = SpiTxRxByte(0);
+ 410          do
+ 411          {
+ 412            SpiTxRxByte(temp);
+ 413            spiRxStatus2 = SpiTxRxByte(0);
+ 414            if(spiRxStatus1 == spiRxStatus2)
+ 415            {
+ 416             if( (spiRxStatus1 & CCxx00_STATE_BM) == CCxx00_STATE_RX_OVERFLOW_BM)
+ 417             {
+ 418                         halSpiStrobe(CCxxx0_SFRX);
+ 419                return 0;
+ 420             }
+ 421                return 1;
+ 422            }
+ 423             spiRxStatus1=spiRxStatus2;
+ 424          }
+ 425          while(i--);
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 8   
+
+ 426          CSN = 1;
+ 427              return 0; 
+ 428          }
+ 429          */
+ 430          INT8U halRfReceivePacket(INT8U *rxBuffer,INT8U *lengthx)
+ 431          {
+ 432   1          INT8U status[2];
+ 433   1          INT8U packetLength;
+ 434   1          INT8U i=(*lengthx)*4;  // ¾ßÌå¶àÉÙÒª¸ù¾ÝdatarateºÍlengthÀ´¾ö¶¨
+ 435   1          halSpiStrobe(CCxxx0_SRX);  //½øÈë½ÓÊÕ×´Ì¬
+ 436   1      //delay(5);
+ 437   1          //while (!GDO1);
+ 438   1          //while (GDO1);
+ 439   1      //      rxBuffer=rxBuffer+2;
+ 440   1      delay(2);
+ 441   1      while (GDO0)
+ 442   1      {
+ 443   2        delay(2);
+ 444   2        --i;
+ 445   2        if(i<1)
+ 446   2           return 0;     
+ 447   2      } 
+ 448   1          if ((halSpiReadStatus(CCxxx0_RXBYTES) & BYTES_IN_RXFIFO)) //Èç¹û½ÓµÄ×Ö½ÚÊý²»Îª0
+ 449   1      {
+ 450   2              packetLength = halSpiReadReg(CCxxx0_RXFIFO);//¶Á³öµÚÒ»¸ö×Ö½Ú£¬´Ë×Ö½ÚÎª¸ÃÖ¡Êý¾Ý³¤¶È
+ 451   2              if (packetLength <= *lengthx)   //Èç¹ûËùÒªµÄÓÐÐ§Êý¾Ý³¤¶ÈÐ¡ÓÚµÈÓÚ½ÓÊÕµ½µÄÊý¾Ý°üµÄ³¤¶È
+ 452   2        {
+ 453   3                  halSpiReadBurstReg(CCxxx0_RXFIFO, rxBuffer, packetLength); //¶Á³öËùÓÐ½ÓÊÕµ½µÄÊý¾Ý
+ 454   3                  *lengthx = packetLength;    //°Ñ½ÓÊÕÊý¾Ý³¤¶ÈµÄÐÞ¸ÄÎªµ±Ç°Êý¾ÝµÄ³¤¶È
+ 455   3      
+ 456   3                  // Read the 2 appended status bytes (status[0] = RSSI, status[1] = LQI)
+ 457   3                  halSpiReadBurstReg(CCxxx0_RXFIFO, status, 2);  //¶Á³öCRCÐ£ÑéÎ»
+ 458   3                              halSpiStrobe(CCxxx0_SIDLE); 
+ 459   3                  halSpiStrobe(CCxxx0_SFRX);  //ÇåÏ´½ÓÊÕ»º³åÇø
+ 460   3                  return (status[1] & CRC_OK);   //Èç¹ûÐ£Ñé³É¹¦·µ»Ø½ÓÊÕ³É¹¦
+ 461   3              }
+ 462   2         else
+ 463   2        {
+ 464   3                  *lengthx = packetLength;
+ 465   3                              halSpiStrobe(CCxxx0_SIDLE); 
+ 466   3                  halSpiStrobe(CCxxx0_SFRX);  //ÇåÏ´½ÓÊÕ»º³åÇø
+ 467   3                  return 0;
+ 468   3              }
+ 469   2          }
+ 470   1      else
+ 471   1        return 0;
+ 472   1      }
+ 473          ///////
+ 474          void Timer0(void) interrupt 1  using 2    //10ms
+ 475          {
+ 476   1        CNT++;
+ 477   1        BlueSendCnt++;
+ 478   1        BlueCnt++;
+ 479   1        if (BlueCnt>20)
+ 480   1         {
+ 481   2          BlueCnt=0;
+ 482   2              BluePoint=0;
+ 483   2         }
+ 484   1      }
+ 485          ///
+ 486          void uart_isr() interrupt   4 using 1    //À´×ÅÖ÷°åµÄ¶ÁÍ·ÐÅÏ¢,10 ×Ö½ÚFE E1 TYPE NUM PAI1£¬PAI2
+ 487          {       uchar i;
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 9   
+
+ 488   1          if (RI)
+ 489   1          {
+ 490   2                 RI=0;
+ 491   2                 for(i=0;i<9;i++)
+ 492   2                              DuoBuf[i]=DuoBuf[i+1];
+ 493   2                          DuoBuf[9]=SBUF;
+ 494   2                 if((DuoBuf[0]==0xfe)&&(DuoBuf[1]==0xe1)&&(DuoBuf[3]!=0)&&(PaiRECOK==0))
+ 495   2                   {
+ 496   3                     if (DuoBuf[3]==2)
+ 497   3                            {PAI1=DuoBuf[4];PAI2=DuoBuf[5];}   //Ë«ÕÅ¸ÐÓ¦
+ 498   3                               else 
+ 499   3                                {PAI1=DuoBuf[4];PAI2=0;}        //µ¥ÕÅ¸ÐÓ¦
+ 500   3                         PaiRECOK=1;
+ 501   3                        }
+ 502   2          }
+ 503   1          else
+ 504   1              TI=0;
+ 505   1      }        
+ 506          void uart_isr2(void) interrupt 8 using 1  //À´×ÅÊÖ»úµÄÐÅÏ¢
+ 507          {       uchar i;
+ 508   1              if(S2CON&0x01)
+ 509   1              {       
+ 510   2                      S2CON = S2CON & 0xFE;     //bit0
+ 511   2                 for(i=0;i<3;i++)
+ 512   2                              RxBuf[i]=RxBuf[i+1];
+ 513   2                          RxBuf[3]=S2BUF;
+ 514   2                      if ((RxBuf[0]==0xfe)&&(RxBuf[3]==0xfd)&&(MobilRECOK==0))
+ 515   2                        {
+ 516   3                         
+ 517   3                         MobilRECOK=1;
+ 518   3                        }
+ 519   2                 /*
+ 520   2                 BlueCnt=0;
+ 521   2                 if (BlueReceiveOk==0)
+ 522   2                 {
+ 523   2                  BlueReceive[BluePoint]=SBUF;
+ 524   2                  BluePoint++;
+ 525   2                  if (BluePoint>=41) BlueReceiveOk=1;
+ 526   2                 }
+ 527   2                 */
+ 528   2          }
+ 529   1      //    else
+ 530   1       //       S2CON = S2CON & 0xFd;
+ 531   1      }
+ 532          /////
+ 533          void UartInit(void)             //9600bps@11.0592MHz
+ 534          {
+ 535   1              SCON = 0x50;            //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 536   1              AUXR &= 0xBF;           //¶¨Ê±Æ÷1Ê±ÖÓÎªFosc/12,¼´12T
+ 537   1              AUXR &= 0xFE;           //´®¿Ú1Ñ¡Ôñ¶¨Ê±Æ÷1Îª²¨ÌØÂÊ·¢ÉúÆ÷
+ 538   1              TMOD &= 0x0F;           //Éè¶¨¶¨Ê±Æ÷1Îª16Î»×Ô¶¯ÖØ×°·½Ê½
+ 539   1              TL1 = 0xE8;             //Éè¶¨¶¨Ê±³õÖµ
+ 540   1              TH1 = 0xFF;             //Éè¶¨¶¨Ê±³õÖµ
+ 541   1              ET1 = 0;                //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï
+ 542   1              TR1 = 1;                //Æô¶¯¶¨Ê±Æ÷1
+ 543   1      
+ 544   1              S2CON = 0x50;           //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 545   1              AUXR |= 0x04;           //¶¨Ê±Æ÷2Ê±ÖÓÎªFosc,¼´1T
+ 546   1              T2L = 0xE0;             //Éè¶¨¶¨Ê±³õÖµ
+ 547   1              T2H = 0xFE;             //Éè¶¨¶¨Ê±³õÖµ
+ 548   1              AUXR |= 0x10;           //Æô¶¯¶¨Ê±Æ÷2
+ 549   1      
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 10  
+
+ 550   1      }
+ 551          /*
+ 552          void UartInit(void)             //9600bps@11.0592MHz
+ 553          {
+ 554                  SCON = 0x50;            //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+ 555                  AUXR &= 0xBF;           //¶¨Ê±Æ÷1Ê±ÖÓÎªFosc/12,¼´12T
+ 556                  AUXR &= 0xFE;           //´®¿Ú1Ñ¡Ôñ¶¨Ê±Æ÷1Îª²¨ÌØÂÊ·¢ÉúÆ÷
+ 557                  TMOD &= 0x0F;           //Éè¶¨¶¨Ê±Æ÷1Îª16Î»×Ô¶¯ÖØ×°·½Ê½
+ 558                  TL1 = 0xE8;             //Éè¶¨¶¨Ê±³õÖµ
+ 559                  TH1 = 0xFF;             //Éè¶¨¶¨Ê±³õÖµ
+ 560                  ET1 = 0;                //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï
+ 561                  TR1 = 1;                //Æô¶¯¶¨Ê±Æ÷1
+ 562          } */
+ 563          //////
+ 564          void Timer0Init(void)           //10ºÁÃë@11.0592MHz
+ 565          {
+ 566   1              AUXR &= 0x7F;           //¶¨Ê±Æ÷Ê±ÖÓ12TÄ£Ê½
+ 567   1              TMOD &= 0xF0;           //ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½
+ 568   1              TL0 = 0x00;             //ÉèÖÃ¶¨Ê±³õÖµ
+ 569   1              TH0 = 0xDC;             //ÉèÖÃ¶¨Ê±³õÖµ
+ 570   1              TF0 = 0;                //Çå³ýTF0±êÖ¾
+ 571   1              TR0 = 1;                //¶¨Ê±Æ÷0¿ªÊ¼¼ÆÊ±
+ 572   1      }
+ 573          
+ 574          //TABLEÊÇ×öÅÆÉÏÀ´µÄ4·½£¬°´ÕÕ¶«ÄÏÎ÷±±Ë³ÐòÅÅÔÚÒ»Æð
+ 575          //
+ 576          //¶Ôpai1,pai2ÕÒµ½TABLEÖÐµÄÎ»ÖÃ£¬pointÊÇÕÒµ½ÒÔºó£¬Ã»ÓÐ×¥µÄÐÂÅÆ¡£mark=0,1,2Æ½Ìø£¬ÊúÌø£¬¸ô¶°Ìø£¬
+ 577          //°ÑÊÖÉÏÅÆ·ÖÅäºÃ  ZhuangPAI[1][],ZhuangPAI[2][],ZhuangPAI[3][],ZhuangPAI[4][]£¬ÏÂ±ê´Ó1¿ªÊ¼·ÅÅÆ
+ 578          //DunNum£ºÃ¿´Î×¥µÄÕÅÊý 2,4,6ÈýÖÖ£¬´ú±íÒ»¶Õ£¬2¶Õ£¬3¶Õ
+ 579          //XianNum:ÏÐ¼ÒµÄÕÅÊý£¬Èç£º13
+ 580          //ZhuangNum£º×¯¼ÒµÄÕÅÊý Èç14
+ 581          //¸ù¾Ý×¯¼ÒµÄÅÆ£¬±¨³öÅö£¬¸Ü£¬ÒÔ¼°ºóÃæµÄ3ÕÅ
+ 582          //PaiTotalÅÆµÄ×ÜÊý¡£°´ÕÅÊý
+ 583          //ReportPen[10],                //Åö  ÏÂ±ê1¿ªÊ¼
+ 584          //ReportGang[10],               //¸Ü   ÏÂ±ê1¿ªÊ¼
+ 585          //ReportFutrue[10];      //Î´À´Òª×¥µÄÅÆ  ÏÂ±ê1¿ªÊ¼
+ 586          void search_point1314(uchar pai1,uchar pai2,uchar mark)
+ 587           {
+ 588   1        uchar i,j,k,f,n,m2,m3,repeat;
+ 589   1               uint li;
+ 590   1              point=0; FangWei=0;
+ 591   1              for (i=0;i<5;i++)
+ 592   1               {for (j=0;j++;j<20)    ZhuangPAI[i][j]=0;}
+ 593   1      
+ 594   1              for (li=(PaiTotal-1);li<=(PaiTotal*2-1);li++)     //PaiTotal×ÜÊý
+ 595   1              {
+ 596   2                if (pai1==TABLE[li]) {point=li;break;}         //ÏÈÕÒµ½µÚÒ»ÕÅÅÆËùÔÚµÄÎ»ÖÃ
+ 597   2              }
+ 598   1              ///////////////Í¨¹ýmarkÕÒµ½×îºó×¥×ßÅÆµÄpoint 
+ 599   1              if (mark==2)    //¸ôÌø
+ 600   1                 {
+ 601   2                        if ((pai2==TABLE[point+4])||(pai2==TABLE[point-4])) //¸ôÌø£¬µÚÒ»ÕÅÔÚpointÎ»ÖÃ£¬
+ 602   2                         {                                                                                              //ÄÇÃ´ÁíÍâÒ»ÕÅÒ»¶¨ÔÚÕâÁ½¸öÎ»ÖÃ¾ÍÊÇ×¯¼Ò
+ 603   3                                  if (pai2==TABLE[point-4]) point=point-3;  //ÅÆÔÚÇ°ÃæÖ¸ÕëºóÒÆ TABLEÀïÃæµÄ±àºÅÊÇ°´ÕÕÉÏÏÂÉÏÏÂ±àºÅµÝÔö
+ 604   3                                        else point=point+1;   //Ö¸ÏòÆäËûÏÐ¼ÒÒª×¥µÄÅÆ 
+ 605   3      
+ 606   3                                  FangWei=1;   //·½Î»=1£¬±íÊ¾×¯¼Ò
+ 607   3                                      //×îºóÒ»ÕÅÅÆÏÈ·ÅºÃ
+ 608   3               //×¯¼ÒµÄ                          
+ 609   3                                       ZhuangPAI[1][13]=TABLE[point-1];
+ 610   3                                   ZhuangPAI[1][14]=TABLE[point+3]; 
+ 611   3                                       //ÏÐ¼ÒµÄ×îºóÒ»ÕÅ
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 11  
+
+ 612   3                                        ZhuangPAI[2][13]=TABLE[point];
+ 613   3                                        point++;
+ 614   3                                  ZhuangPAI[3][13]=TABLE[point];
+ 615   3                                        point++; 
+ 616   3                                        ZhuangPAI[4][13]=TABLE[point];
+ 617   3                                        point=point+2;        //½Ó×ÅÄÇÕÅÒÑ¾­ÓÐÒ»ÕÅ±»×¯¼Ò×¥ÁË£¬ËùÒÔ¼Ó2£¬Ö¸ÏòÐÂÅÆ£¬ÒÔºóÒªÃþµÃ
+ 618   3              
+ 619   3                                       
+ 620   3                              }
+ 621   2                        else //ÏÐ¼ÒÒªÇóµÚÒ»ÕÅºÍ×îºóÒ»ÕÅÀ´¸ÐÓ¦ ,ÏÐ¼Ò×îºóÖ»×¥Ò»ÕÅ£¬ËùÒÔ²»ÄÜ²ÉÓÃ£¬×îºó×¥µÄÁ½ÕÅÀ´¸ÐÓ¦
+ 622   2                        {
+ 623   3                         if (DunNum==4)  //Ã¿´Î4ÕÅ
+ 624   3                          {
+ 625   4                                if ((pai2==TABLE[point-45])||(pai2==TABLE[point+45])) //µÚ¶þÕÅ
+ 626   4                                     {
+ 627   5                                           FangWei=2;         //¸ù¾ÝµÚ¶þÕÅÔÚpai1µÄÇ°Ãæ£¬±íÊ¾pai1ÊÇ×îºó×¥µÄ£¬Ö¸Õë¶¨Î»+4
+ 628   5                                               if (pai2==TABLE[point-45])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      ////×îºóÒ»ÕÅÅÆÏÈ·ÅºÃ,Ö¸Ï
+             -òÐÂÅÆ 
+ 629   5                                                else point=point+49;
+ 630   5                                         } 
+ 631   4                                 else if ((pai2==TABLE[point-42])||(pai2==TABLE[point+42])) 
+ 632   4                                     {
+ 633   5                                           FangWei=3;
+ 634   5                                               if (pai2==TABLE[point-42])  {ZhuangPAI[3][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 635   5                                                else point=point+45;
+ 636   5                                         } 
+ 637   4                                 else if ((pai2==TABLE[point-39])||(pai2==TABLE[point+39])) 
+ 638   4                                     {
+ 639   5                                           FangWei=4;
+ 640   5                                               if (pai2==TABLE[point-39])  {ZhuangPAI[4][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 641   5                                                else point=point+41;
+ 642   5                                         } 
+ 643   4      
+ 644   4                              }
+ 645   3                              else if (DunNum==2)  //Ã¿´Î2ÕÅ
+ 646   3                              {
+ 647   4                                if ((pai2==TABLE[point-47])||(pai2==TABLE[point+47])) 
+ 648   4                                     {
+ 649   5                                           FangWei=2;
+ 650   5                                               if (pai2==TABLE[point-47])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      //Ö¸ÏòÐÂÅÆ 
+ 651   5                                                else point=point+51;
+ 652   5                                         } 
+ 653   4                                 else if ((pai2==TABLE[point-46])||(pai2==TABLE[point+46])) 
+ 654   4                                     {
+ 655   5                                           FangWei=3;
+ 656   5                                               if (pai2==TABLE[point-46])  {ZhuangPAI[3][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 657   5                                                else point=point+49;
+ 658   5                                         } 
+ 659   4                                 else if ((pai2==TABLE[point-45])||(pai2==TABLE[point+45])) 
+ 660   4                                     {
+ 661   5                                           FangWei=4;
+ 662   5                                               if (pai2==TABLE[point-45])  {ZhuangPAI[4][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 663   5                                                else point=point+47;
+ 664   5                                         } 
+ 665   4      
+ 666   4                              }
+ 667   3      
+ 668   3                              else if (DunNum==6)  //Ã¿´Î6ÕÅ
+ 669   3                              {
+ 670   4                                if ((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+ 671   4                                     {
+ 672   5                                           FangWei=2;
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 12  
+
+ 673   5                                               if (pai2==TABLE[point-43])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      //Ö¸ÏòÐÂÅÆ 
+ 674   5                                                else point=point+47;
+ 675   5                                         } 
+ 676   4                                 else if ((pai2==TABLE[point-38])||(pai2==TABLE[point+38])) 
+ 677   4                                     {
+ 678   5                                           FangWei=3;
+ 679   5                                               if (pai2==TABLE[point-38])  {ZhuangPAI[3][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 680   5                                                else point=point+41;
+ 681   5                                         } 
+ 682   4                                 else if ((pai2==TABLE[point-33])||(pai2==TABLE[point+33])) 
+ 683   4                                     {
+ 684   5                                           FangWei=4;
+ 685   5                                               if (pai2==TABLE[point-33])  {ZhuangPAI[4][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 686   5                                                else point=point+35;
+ 687   5                                         } 
+ 688   4      
+ 689   4                              }
+ 690   3                        }
+ 691   2      
+ 692   2                 }
+ 693   1              else if (mark==0)   //Æ½Ìø
+ 694   1               {
+ 695   2                        if ((pai2==TABLE[point-2])||(pai2==TABLE[point+2]))     ////Æ½Ìø,µÚ¶þÕÅÔÚÇ°Ãæ»òÕßºóÃæÁ½ÕÅ
+ 696   2                         {
+ 697   3                         if (pai2==TABLE[point-2]) point=point+3;      //×¯¼Ò×¥Íê£¬»¹ÐèÒª×¥µô3ÕÅ
+ 698   3                           else point=point+5;  //pointÖ¸ÏòµÄÅÆÊÇÐÂÅÆ
+ 699   3                                 FangWei=1;   //·½Î»=1£¬±íÊ¾×¯¼Ò
+ 700   3                                 ZhuangPAI[1][13]=TABLE[point-3];
+ 701   3                                 ZhuangPAI[1][14]=TABLE[point-5];
+ 702   3                         }
+ 703   2                       else //ÏÐ¼Ò
+ 704   2                        {
+ 705   3                         if (DunNum==4)  //Ã¿´Î4ÕÅ
+ 706   3                          {
+ 707   4                                if ((pai2==TABLE[point-45])||(pai2==TABLE[point+45])) 
+ 708   4                                     {
+ 709   5                                           FangWei=2;
+ 710   5                                               if (pai2==TABLE[point-45])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      //Ö¸ÏòÐÂÅÆ 
+ 711   5                                                else point=point+49;
+ 712   5                                         } 
+ 713   4                                 else if ((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+ 714   4                                     {
+ 715   5                                           FangWei=3;
+ 716   5                                               if (pai2==TABLE[point-43])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 717   5                                                else point=point+45;
+ 718   5                                         } 
+ 719   4                                 else if ((pai2==TABLE[point-40])||(pai2==TABLE[point+40])) 
+ 720   4                                     {
+ 721   5                                           FangWei=4;
+ 722   5                                               if (pai2==TABLE[point-40])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 723   5                                                else point=point+41;
+ 724   5                                         } 
+ 725   4      
+ 726   4                              }
+ 727   3                              else if (DunNum==2)  //Ã¿´Î2ÕÅ
+ 728   3                              {
+ 729   4                                if ((pai2==TABLE[point-47])||(pai2==TABLE[point+47])) 
+ 730   4                                     {
+ 731   5                                           FangWei=2;
+ 732   5                                               if (pai2==TABLE[point-47])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      //Ö¸ÏòÐÂÅÆ 
+ 733   5                                                else point=point+51;
+ 734   5                                         } 
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 13  
+
+ 735   4                                 else if ((pai2==TABLE[point-47])||(pai2==TABLE[point+47])) 
+ 736   4                                     {
+ 737   5                                           FangWei=3;
+ 738   5                                               if (pai2==TABLE[point-47])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 739   5                                                else point=point+49;
+ 740   5                                         } 
+ 741   4                                 else if ((pai2==TABLE[point-46])||(pai2==TABLE[point+46])) 
+ 742   4                                     {
+ 743   5                                           FangWei=4;
+ 744   5                                               if (pai2==TABLE[point-46])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 745   5                                                else point=point+47;
+ 746   5                                         } 
+ 747   4      
+ 748   4                              }
+ 749   3      
+ 750   3                              else if (DunNum==6)  //Ã¿´Î6ÕÅ
+ 751   3                              {
+ 752   4                                if ((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+ 753   4                                     {
+ 754   5                                           FangWei=2;
+ 755   5                                               if (pai2==TABLE[point-43])  {ZhuangPAI[2][13]=TABLE[point];point=point+4;}      //Ö¸ÏòÐÂÅÆ 
+ 756   5                                                else point=point+47;
+ 757   5                                         } 
+ 758   4                                 else if ((pai2==TABLE[point-39])||(pai2==TABLE[point+39])) 
+ 759   4                                     {
+ 760   5                                           FangWei=3;
+ 761   5                                               if (pai2==TABLE[point-39])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 762   5                                                else point=point+41;
+ 763   5                                         } 
+ 764   4                                 else if ((pai2==TABLE[point-34])||(pai2==TABLE[point+34])) 
+ 765   4                                     {
+ 766   5                                           FangWei=4;
+ 767   5                                               if (pai2==TABLE[point-34])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 768   5                                                else point=point+35;
+ 769   5                                         } 
+ 770   4      
+ 771   4                              }
+ 772   3                        } 
+ 773   2                        
+ 774   2               }
+ 775   1               //     ÊúÌø
+ 776   1               else if (mark==1) 
+ 777   1                {
+ 778   2                      if ((pai2==TABLE[point+1])||(pai2==TABLE[point-1]))
+ 779   2                         {
+ 780   3                          if (pai2==TABLE[point+1]) point=point+5;     //pointÖ¸ÏòµÄÅÆÊÇÐÂÅÆ
+ 781   3                                else point=point+4;   //Ö¸ÏòÐÂÅÆ 
+ 782   3                              ZhuangPAI[1][13]=TABLE[point-4];
+ 783   3                              ZhuangPAI[1][14]=TABLE[point-5];
+ 784   3                              FangWei=1;   //·½Î»=1£¬±íÊ¾×¯¼Ò
+ 785   3                         }
+ 786   2                 else //ÏÐ¼Ò
+ 787   2                        {
+ 788   3                         if (DunNum==4)  //Ã¿´Î4ÕÅ
+ 789   3                          {
+ 790   4                                if ((pai2==TABLE[point-46])||(pai2==TABLE[point+46])) 
+ 791   4                                     {
+ 792   5                                           FangWei=2;
+ 793   5                                               if (pai2==TABLE[point-46])  {ZhuangPAI[2][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 794   5                                                else point=point+49;
+ 795   5                                         } 
+ 796   4                                 else if ((pai2==TABLE[point-43])||(pai2==TABLE[point+43])) 
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 14  
+
+ 797   4                                     {
+ 798   5                                           FangWei=3;
+ 799   5                                               if (pai2==TABLE[point-43])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 800   5                                                else point=point+45;
+ 801   5                                         } 
+ 802   4                                 else if ((pai2==TABLE[point-40])||(pai2==TABLE[point+40])) 
+ 803   4                                     {
+ 804   5                                           FangWei=4;
+ 805   5                                               if (pai2==TABLE[point-40])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 806   5                                                else point=point+41;
+ 807   5                                         } 
+ 808   4      
+ 809   4                              }
+ 810   3                              else if (DunNum==2)  //Ã¿´Î2ÕÅ
+ 811   3                              {
+ 812   4                                if ((pai2==TABLE[point-48])||(pai2==TABLE[point+48])) 
+ 813   4                                     {
+ 814   5                                           FangWei=2;
+ 815   5                                               if (pai2==TABLE[point-48])  {ZhuangPAI[2][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 816   5                                                else point=point+51;
+ 817   5                                         } 
+ 818   4                                 else if ((pai2==TABLE[point-49])||(pai2==TABLE[point+49])) 
+ 819   4                                     {
+ 820   5                                           FangWei=3;
+ 821   5                                               if (pai2==TABLE[point-49])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 822   5                                                else point=point+51;
+ 823   5                                         } 
+ 824   4                                 else if ((pai2==TABLE[point-46])||(pai2==TABLE[point+46])) 
+ 825   4                                     {
+ 826   5                                           FangWei=4;
+ 827   5                                               if (pai2==TABLE[point-46])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 828   5                                                else point=point+47;
+ 829   5                                         } 
+ 830   4      
+ 831   4                              }
+ 832   3      
+ 833   3                              else if (DunNum==6)  //Ã¿´Î6ÕÅ
+ 834   3                              {
+ 835   4                                if ((pai2==TABLE[point-44])||(pai2==TABLE[point+44])) 
+ 836   4                                     {
+ 837   5                                           FangWei=2;
+ 838   5                                               if (pai2==TABLE[point-44])  {ZhuangPAI[2][13]=TABLE[point];point=point+3;}      //Ö¸ÏòÐÂÅÆ 
+ 839   5                                                else point=point+47;
+ 840   5                                         } 
+ 841   4                                 else if ((pai2==TABLE[point-39])||(pai2==TABLE[point+39])) 
+ 842   4                                     {
+ 843   5                                           FangWei=3;
+ 844   5                                               if (pai2==TABLE[point-39])  {ZhuangPAI[3][13]=TABLE[point];point=point+2;}      //Ö¸ÏòÐÂÅÆ 
+ 845   5                                                else point=point+41;
+ 846   5                                         } 
+ 847   4                                 else if ((pai2==TABLE[point-34])||(pai2==TABLE[point+34])) 
+ 848   4                                     {
+ 849   5                                           FangWei=4;
+ 850   5                                               if (pai2==TABLE[point-34])  {ZhuangPAI[4][13]=TABLE[point];point=point+1;}      //Ö¸ÏòÐÂÅÆ 
+ 851   5                                                else point=point+35;
+ 852   5                                         } 
+ 853   4      
+ 854   4                              }
+ 855   3                        }
+ 856   2              
+ 857   2      
+ 858   2                 }
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 15  
+
+ 859   1                 else //ÈýÖÖ·½Ê½¶¼²»ÊÇ£¬¿ÉÄÜ¾ÍÊÇÏÐ¼Ò¸ÐÓ¦ÅÆ
+ 860   1                 {
+ 861   2      
+ 862   2                 }    
+ 863   1       
+ 864   1                
+ 865   1        //¸ù¾Ýpoint·Ö³ö4¸±ÅÆ£¬pointÊÇÖ¸ÏòÂíÉÏÒª×¥µÄÐÂÅÆ               
+ 866   1                li=point-5-((XianNum-1)*4);   //ÒòÎª×îºóÒ»ÕÅÒÑ¾­·ÅºÃÁË£¬//»ØÍËµ½¿ªÊ¼×¥ÅÆµÄÆðµã
+ 867   1          Tail=li-1;
+ 868   1                       
+ 869   1                    n=0;
+ 870   1                   for (j=1;j<=(XianNum/DunNum);j++)    //13ÕÅ,Ã¿ÂÖDunNum=4£¬Ò»¹²×¥(XianNum/DunNum)=3ÂÖ£¬»ù±¾µÄÅÆÊý·ÖÅäº
+             -Ã
+ 871   1                         {
+ 872   2                                              for (k=1;k<=DunNum;k++)    //Ã¿ÈË×¥µÄÕÅÊýDunNum =4 £¬´ÓÏÂ±ê1¿ªÊ¼·Å
+ 873   2                                        {
+ 874   3                                               ZhuangPAI[1][n+k]=TABLE[li];
+ 875   3                                               li++;
+ 876   3                                              }
+ 877   2                                              for (k=1;k<=DunNum;k++)    //Ã¿ÈË×¥µÄÕÅÊýDunNum =4
+ 878   2                                        {
+ 879   3                                              ZhuangPAI[2][n+k]=TABLE[li];
+ 880   3                                              li++;
+ 881   3                                              }
+ 882   2                                               for (k=1;k<=DunNum;k++)           //Ã¿ÈË×¥µÄÕÅÊýDunNum =4
+ 883   2                                        {
+ 884   3                                              ZhuangPAI[3][n+k]=TABLE[li];
+ 885   3                                              li++;
+ 886   3                                              }
+ 887   2                                               for (k=1;k<=DunNum;k++)           //Ã¿ÈË×¥µÄÕÅÊýDunNum =4
+ 888   2                                        {
+ 889   3                                              ZhuangPAI[4][n+k]=TABLE[li];
+ 890   3                                              li++;
+ 891   3                                        }
+ 892   2                                        n=n+DunNum;
+ 893   2                         }
+ 894   1      
+ 895   1               
+ 896   1                                        
+ 897   1         //ËÑË÷ZhuangPAI[][] 4·½ÊÖÖÐµÄ2ÕÅ£¬ºÍ3ÕÅÏàÍ¬µÄÅÆÕûÀí·ÅÈëCOUPLE[][],TRI[][]
+ 898   1                 for (j=1;j<=4;j++)
+ 899   1                          {
+ 900   2                              for (n=1;n<=10;n++)
+ 901   2                           {
+ 902   3                                COUPLE[j][n]=0;               //ÏÈ°ÑËùÓÐµ¥ÔªÇåÁã¡£´æ·Å¶Ô×Ó±àºÅµÄ´æ´¢Æ÷£¬1ºÅµ¥Ôª¿ªÊ¼¡£µ½ÄÚÈÝ=0½áÊø
+ 903   3                                TRI[j][n]=0;
+ 904   3                               }
+ 905   2                              }
+ 906   1      
+ 907   1                 repeat=0; m2=1;m3=1;
+ 908   1                         for (j=1;j<=4;j++)     //j£¬4¸¶ÅÆ
+ 909   1                         {
+ 910   2                           for (n=1;n<ZhuangNum;n++)
+ 911   2                                 ZhuangPAITemp[n]=ZhuangPAI[j][n];   //°ÑÐèÒªÑ°ÕÒµÄÄÇ¸±ÅÆ·Åµ½ÔÝ´æÇø
+ 912   2                           for (n=1;n<ZhuangNum-1;n++)         //14ÕÅÅÆÒ»Ò»Ñ°ÕÒ£¬nÏÈÈ¡Ò»ÕÅ £¬k¸úÕâÕÅºóÃæµÄ±È½Ï£¬repeatÖØ¸´Êý£¬=2»òÕß=
+             -3
+ 913   2                               {
+ 914   3                                   for (k=n+1;k<=ZhuangNum;k++)
+ 915   3                                       {        //4¸ö1Íò£¬±àºÅÁ¬Ðø4¸öÊý¡£¸Õ¸ÕºÃ/4ÊÇÒ»ÑùµÄ
+ 916   4                                         if (((ZhuangPAITemp[n]/4)==(ZhuangPAITemp[k]/4))&&(ZhuangPAITemp[k]!=0)&&(ZhuangPAITemp[n]!=0))
+ 917   4                                              {repeat++;ZhuangPAITemp[k]=0;}     //ÒÑ¾­ÕÒµ½µÄÅÆÎ»ÖÃÇåÁã£¬Ö»ÁôµÚÒ»ÕÅ£¬ºóÃæ²»ÐèÒªÕÒ¡£±ÜÃâ¸Õ¸ÕÕÒ
+             -µ½3ÕÅ£¬ºóÃæÓÖÈÏÎªÓÐ2ÕÅ¶Ô×Ó
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 16  
+
+ 918   4                                       }
+ 919   3                                       if (repeat==2)  //¶Ô×Ó
+ 920   3                                       {
+ 921   4                                        COUPLE[j][m2]=ZhuangPAITemp[n]; 
+ 922   4                                        m2++; //´Ó[1][1]¿ªÊ¼´æ·Å
+ 923   4                                       }
+ 924   3                                        else if (repeat==3)  //ÈýÕÅ
+ 925   3                                        {
+ 926   4                                        TRI[j][m3]=ZhuangPAITemp[n]; 
+ 927   4                                        m3++;
+ 928   4                                        }
+ 929   3                           }
+ 930   2                         }
+ 931   1                         /*
+ 932   1                        BlueSend[0]=0xfe;
+ 933   1                        BlueSend[1]=0xc1;
+ 934   1                        BlueSend[2]=10;
+ 935   1                        for (j=1;j<=10;j++)
+ 936   1                          BlueSend[j+2]=COUPLE[1][j];
+ 937   1                        checkcrc=crccheck(BlueSend,39);          //CRCÐ£Ñé
+ 938   1                        BlueSend[39]=checkcrc/256;     //RfReceive[1]ÊÇE1,E2,E3,E4´ú±í·½Î»
+ 939   1                        BlueSend[40]=checkcrc%256;
+ 940   1      
+ 941   1                        Send_string2(BlueSend,41);
+ 942   1                        */
+ 943   1              /*
+ 944   1        /////¸ù¾Ý×Ô¼ºµÄ·½Î»FangWei£¬±¨³ö¶ÔÊÖµÄÅöÅÆºÍ¸ÜÅÆ,FangWei=1±íÊ¾×¯¼ÒÓÐ14ÕÅ       
+ 945   1         m=1;k=1;
+ 946   1         for (n=1;n<=9;n++)
+ 947   1          {
+ 948   1                ReportGang[n]=0;
+ 949   1                ReportPen[n]=0;                                 
+ 950   1              }
+ 951   1         for (n=1;n<=ZhuangNum;n++)     //°´ÕÕ14ÕÅÀ´Ñ°ÕÒ£¬Èç¹ûÏÐ¼Ò£¬×îºóÒ»ÕÅ=0, Ò²ÕÒ²»×ÅÆ¥ÅäµÄ
+ 952   1         {
+ 953   1           for (f=1;f<4;f++)
+ 954   1               {
+ 955   1                if (f==FangWei) continue;       //×Ô¼ºµÄ·½Î»£¬²»ÕÒ
+ 956   1                for (j=1;j<=9;j++)  
+ 957   1                 {
+ 958   1                  if (COUPLE[f][j]==0) break;
+ 959   1                      if ((ZhuangPAI[FangWei][n]/4)==(COUPLE[f][j]/4))  //×Ô¼ºµÄÅÆºÍ±ðµÄ·½Î»ÕÒµ½µÄ¶Ô×Ó±àºÅ±È½Ï
+ 960   1                        {
+ 961   1                         ReportPen[m]=ZhuangPAI[FangWei][n];m++;
+ 962   1                        }
+ 963   1                 }
+ 964   1                 for (j=1;j<=9;j++)
+ 965   1                 {
+ 966   1                  if (TRI[f][j]==0) break;
+ 967   1                      if ((ZhuangPAI[FangWei][n]/4)==(TRI[f][j]/4)) 
+ 968   1                        {
+ 969   1                         ReportGang[k]=ZhuangPAI[FangWei][n];k++;
+ 970   1                        }
+ 971   1                 }
+ 972   1                 
+ 973   1               }
+ 974   1         }
+ 975   1        //¸ù¾ÝPOINT±¨³öFangWeiÕâ·½½«Òª×¥µ½µÄReportNumÕÅ£¬·ÅÈëReportFutrue[]
+ 976   1        //POINTÖ¸µÄÅÆÓÀÔ¶ÊÇµÚ¶þ·½×¥µÄÅÆ  FangWei=2
+ 977   1         for (j=1;j<=ReportNum;j++)   ReportFutrue[j]=0;
+ 978   1      
+ 979   1         for (j=1;j<=ReportNum;j++)
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 17  
+
+ 980   1         {
+ 981   1           if (FangWei==1) 
+ 982   1                {
+ 983   1                 ReportFutrue[j]=TABLE[point+3+(j-1)*4];
+ 984   1                }
+ 985   1                else if (FangWei==2) 
+ 986   1                {
+ 987   1                 ReportFutrue[j]=TABLE[point+(j-1)*4];
+ 988   1                }
+ 989   1                 else if (FangWei==3) 
+ 990   1                {
+ 991   1                 ReportFutrue[j]=TABLE[point+1+(j-1)*4];
+ 992   1                }
+ 993   1                 else if (FangWei==4) 
+ 994   1                {
+ 995   1                 ReportFutrue[j]=TABLE[point+2+(j-1)*4];
+ 996   1                }
+ 997   1         }
+ 998   1                */
+ 999   1       }
+*** WARNING C280 IN LINE 588 OF MAIN.C: 'f': unreferenced local variable
+1000          
+1001          ///×¥Ò»ÕÅ¸ù¾Ý¸ÃÅÆÎ»ÖÃpoint±¨³öºóÃæµÄÅÆ
+1002          //¸ù¾Ý pointºóÃæµÄÅÆÕÒµ½ÕâÕÅÅÆµÄÎ»ÖÃ£¬±¨³öºóÃæµÄÅÆ
+1003          //×Ô¼º·½½«Òª×¥µ½µÄReportNumÕÅ£¬·ÅÈëReportFutrue[]
+1004           void report_current_self(uchar pai1)
+1005           {
+1006   1         uchar temp,j;
+1007   1         for (j=1;j<=ReportNum;j++)   ReportFutrue[j]=0;
+1008   1         temp=point;
+1009   1         for (j=temp;j<=PaiTotal;j++)   //PaiTotal×ÜÊý
+1010   1              {
+1011   2                if (pai1==TABLE[j]) {point=j;break;}   //ÏÈÕÒµ½µÚÒ»ÕÅÅÆËùÔÚµÄÎ»ÖÃ
+1012   2              }
+1013   1      
+1014   1               for (j=1;j<=ReportNum;j++)
+1015   1                 {
+1016   2                 ReportFutrue[j]=TABLE[point+j*4];
+1017   2                 }
+1018   1        
+1019   1       }
+1020          //µÚ¶þ´Î¸ÐÓ¦±¨ÕâÕÅÅÆºóÃæµÄÈýÕÅ
+1021          
+1022          
+1023          //±¨¸ÜÅÆ
+1024          
+1025          
+1026          //±¨ºúÅÆ
+1027          //¸ñÊ½£ºfe,e1,
+1028           //Ë³Ê±Õë×¥ÅÆ¡£ÄæÊ±Õë´òÅÆ
+1029          void CombinePaiToOneTable(void)
+1030          {
+1031   1          uint z,i,position;
+1032   1              //TableUpE¸ñÊ½FE,E1,PAI_NUM TableUpE¡¾3¡¿¿ªÊ¼²ÅÊÇÅÆ£¬
+1033   1              //×öºÃµÄÅÆ°´ÕÕË³Ê±Õë·½Ïò£¬Î²°ÍÔÚÇ°Ãæ£¬ÏÂ²ãÊÇµÚÒ»ÕÅ¡£ÉÏÏÂÒª»»£¬Í·Î²Òª»»
+1034   1                position=0;
+1035   1                      for(i=0;i<4;i++)
+1036   1                       {
+1037   2                               for (z=(DIR_PAI_NUM[i]+2);z>=4;z=z-2)  //Èç32ÕÅ£¬¼ÓÉÏ3×Ö½ÚÍ·£¬Ó¦¸ÃÊÇ35£¬ÏÂ±ê34£¬Ó¦¸Ã´Ó34ÏÂ±ê¿ªÊ¼
+1038   2                                {
+1039   3                                              //position1=z-(DIR_PAI_NUM[i]+2);
+1040   3                                 TABLE[position+((DIR_PAI_NUM[i]+2))-z]=TableUpE[i][z];         //·¢ËÍ¹ýÀ´µÄÅÆÏÂÃæµÚÒ»ÕÅ£¬ÉÏÃæµÚ¶þÕÅ¡£×¥ÅÆµ
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 18  
+
+             -ÄË³Ðò¸ÕºÃÏà·´¡£ËùÒÔµ÷Õûµ½×¥ÅÆË³Ðòµ½TABLE
+1041   3                                 TABLE[position+((DIR_PAI_NUM[i]+2))-z+1]=TableUpE[i][z-1];
+1042   3                                }
+1043   2                                position=position+DIR_PAI_NUM[i];
+1044   2                       }
+1045   1                       //ÖØ¸´Ò»¸±ÅÆÔÚºóÃæ£¬ÏÖ³ÉÒ»¸öÑ­»·¡£×¥ÅÆÎ»ÖÃ´ÓµÚ¶þ¸¶ÀïÃæÕÒ¡£
+1046   1                      for(i=0;i<PaiTotal;i++)
+1047   1                       {
+1048   2                               TABLE[PaiTotal+i]=TABLE[i]; 
+1049   2                       }
+1050   1      }       
+1051             
+1052          ////////////////
+1053          void main(void)
+1054          {
+1055   1              uchar idata  i,j,n;
+1056   1              P2M1=0;
+1057   1              P2M0=0x10;
+1058   1              LED=1;
+1059   1              
+1060   1              CpuInit();
+1061   1              UartInit();
+1062   1              Timer0Init();
+1063   1              delayms(3000); 
+1064   1              POWER_UP_RESET_CC1100();
+1065   1              halRfWriteRfSettings();
+1066   1              halSpiWriteBurstReg(CCxxx0_PATABLE, PaTabel, 8);
+1067   1              ET0=1;
+1068   1              ES=1;
+1069   1              IE2  |= 1;//Æô¶¯´®¿Ú2 
+1070   1              EA=1;
+1071   1              delayms(500);  
+1072   1              //Send_string(RfReceive,4);
+1073   1              //AUXR1=0x40;
+1074   1              //TxBuf[0]=0xe5; 
+1075   1              TiaoPaiType=2;  //2-¸ôÌø
+1076   1              PaiTotal=DIR_PAI_NUM[0]+DIR_PAI_NUM[1]+DIR_PAI_NUM[2]+DIR_PAI_NUM[3];
+1077   1       while(1)
+1078   1       {
+1079   2         WDT_CONTR=0x3e;
+1080   2        if (PaiRECOK==1)
+1081   2         {
+1082   3          //ÊÕµ½ÅÆµÄ±¨ÎÄ¡£Ö»·¢Ò»´ÎÓÐÅÆµÄ¡£
+1083   3          if ((MAY_START==1)&&(PAI1!=0)&&(PAI2!=0))  //»¹Ã»ÓÐ¿ª¾Ö
+1084   3               {
+1085   4                 search_point1314(PAI1,PAI2,TiaoPaiType);  //ÕÒµ½ÅÆµÄÎ»ÖÃ
+1086   4                 if (FangWei!=0)        //ÕÒµ½ÅÆµÄÎ»ÖÃ£¬FangWei¾Í£¡=0
+1087   4                   { 
+1088   5                        Line_2A_WTN5(KAI_JU);  //±¨¡°¿ª¾Ö¡±
+1089   5                        //ReportPen,ReportGang,ReportFutrue
+1090   5                        MAY_START=0;
+1091   5                        JUST_START=1;    //ÒÑ¾­¿ª¾Ö±êÖ¾
+1092   5                        }
+1093   4                 PAI1=0;PAI2=0;
+1094   4               }
+1095   3          else if((PAI1!=0)&&(PAI2==0)&&(JUST_START==1))   //¿ª¾Ö³É¹¦£¬Ò»ÕÅÅÆ
+1096   3               {
+1097   4                if (PAIBAK!=PAI1)
+1098   4                  report_current_self(PAI1);  //µÚÒ»´Î¸ÐÓ¦£¬±¨×Ô¼º
+1099   4                 else 
+1100   4                  report_current_self(PAI1);  //µÚ¶þ´Î¸ÐÓ¦Í¬Ò»ÕÅÅÆ£¬±¨±ðÈË×¥µÄ 
+1101   4                PAIBAK=PAI1;
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 19  
+
+1102   4               }
+1103   3      
+1104   3              else if((PAI1!=0)&&(PAI2!=0)&&(JUST_START==1))  //¿ª¾ÖÒÔºóµÄÁ½ÕÅÅÆ¸ÐÓ¦
+1105   3               {
+1106   4      
+1107   4               }
+1108   3              PaiRECOK=0;
+1109   3        }
+1110   2        
+1111   2       if (CNT>100)
+1112   2        {
+1113   3         CNT=0;
+1114   3         LED=1;
+1115   3         leng=1;
+1116   3              TxBuf[0]++;
+1117   3         if (TxBuf[0]>=0xe5) TxBuf[0]=0xe1;
+1118   3         //TxBuf[0]=0xe3;
+1119   3         halRfSendPacket(TxBuf,1);  //·¢Êý¾ÝµÄÊ±ºòÖ»Òªµ÷ÓÃÕâ¸öº¯Êý¾Í¿ÉÒÔÁË£¬TxBufÊÇ¸öÊý×éÒª·¢Ê²Ã´¾Í°ÑÊ²Ã´Ð´½øÈ¥£
+             -¬ºóÃæÊÇ·¢ËÍµÄ
+1120   3         
+1121   3         delayms(200);
+1122   3         leng=40;
+1123   3         //halRfReceivePacket(RxBuf,&leng);
+1124   3         //test
+1125   3         
+1126   3         //Line_2A_WTN5(num);
+1127   3         // num++;
+1128   3         //if (num>0xcf) num=0;
+1129   3         
+1130   3         //°´ÕÕÒªÇóµÄ¸ñÊ½·¢¸øÀ¶ÑÀ
+1131   3         //ÊÕµ½Êý¾ÝRfReceive£ºfe,e1,TYPE,PAI_NUM,PAI1...... 40×Ö½Ú£¬ÅÆ36×Ö½Ú£¬¸úÀ¶ÑÀ·¢ËÍ²»Ò»Ñù£¬ÐèÒªÕûÀí
+1132   3         //×ª»¯ÎªTableUpE£¬BlueSend£¬fe,e1,PAI_NUM,PAI1,......CRC,CRC Ò»¹²41×Ö½Ú
+1133   3      
+1134   3         //À´ÁíÍâÒ»¸±ÅÆ£¬¿ÉÄÜÖ»ÊÇÒ»·½£¬ÆäËû¼¸·½·¢¹ýÀ´»¹ÊÇÉÏÒ»¸¶£¬ÅÆÀàÐÍ»áÔÙ´Î±ä»¯
+1135   3         //1¡¢Í£Ö¹´æ·ÅÊý¾Ý¡££¬Èç¹û¼ÌÐø´æ·ÅµÄ»°£¬°ÑÌ¨ÏÂÅÆÇåÁË £¬±ØÐë4·½ÅÆÈ«²¿ÎªÍ¬Ò»¸öÀàÐÍ£¬´«ÊäºÍ´æ·Å¼ÌÐø
+1136   3         if ((halRfReceivePacket(RfReceive,&leng))!=0) 
+1137   3          {   
+1138   4                 // Send_string(RfReceive,40);
+1139   4                      if (RfReceive[3]!=0)  //ÅÆÊýÁ¿²»Îª0
+1140   4                      {
+1141   5                        PaiType[TxBuf[0]-0xe1]=RfReceive[2];   //ÅÆÀàÐÍ
+1142   5                         //±ØÐë4·½ÅÆÈ«²¿ÎªÍ¬Ò»¸öÀàÐÍ£¬´«ÊäºÍ´æ·Å¼ÌÐø
+1143   5                        if ((PaiType[0]==PaiType[1])&&(PaiType[2]==PaiType[3])&&(PaiType[1]==PaiType[2])) 
+1144   5                        //À´ÁíÍâÒ»¸±ÅÆ£¬Ö»ÒªÒ»¸öÄ£¿éÀ´ÁËÐÂÅÆ£¬ÆäËûÄ£¿éÈ«²¿»»ÐÂÅÆ£¬¼´Ê¹»¹ÊÇ·¢¾ÉÅÆÐÅÏ¢
+1145   5                         {                                                                                                                                             
+1146   6                           if  (PaiTypeBak!=PaiType[0]) //4·½ÅÆÈ«²¿Ò»ÖÂ£¬ÐÂÅÆÁË¶øÇÒºÍÉÏ´ÎÀàÐÍ²»Ò»Ñù£¨ÐÂÅÆ£¬¿ªÊ¼´«Êä
+1147   6                              {
+1148   7                                   for (j=0;j<4;j++)
+1149   7                                       {
+1150   8                                    for (i=2;i<40;i++) TableUpE[j][i]=TableDnE[j][i]; //°ÑÌ¨ÏÂTableDnE4·½´«Êäµ½Ì¨ÉÏTableUpE
+1151   8                                       }
+1152   7      
+1153   7                                       //Èç¹ûÅÆÊýÁ¿¶àÁË£¬ÖØÐÂÕûÀí£¬°Ñ0È¥µô
+1154   7                                      for (j=0;j<4;j++)
+1155   7                                       {
+1156   8                                               if (TableUpE[j][2]>DIR_PAI_NUM[j])  //TableUpE[j][2]¶àÓÚÅÆµÄÊµ¼ÊÊýÁ¿
+1157   8                                                {
+1158   9                                                  for (i=3;i<(TableUpE[j][2]+3);i++)  //TableUpE[j][3]¿ªÊ¼ÅÐ¶ÏÊÇ²»ÊÇÓÐ0µÄÅÆ,ÅÐ¶Ï32ÕÅ
+1159   9                                                       {
+1160  10                                                         if (TableUpE[j][i]==0)
+1161  10                                                          {
+1162  11                                                                for (n=i;n<(TableUpE[j][2]+3);n++)   //Èç¹û¸ÃÕÅ=0£»ÓÃºóÃæµÄÅÆ¸²¸Ç
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 20  
+
+1163  11                                                                 {
+1164  12                                                                   TableUpE[j][n]=TableUpE[j][n+1];
+1165  12                                                                 }
+1166  11                                                                TableUpE[j][2]--;
+1167  11                                                                if (TableUpE[j][2]<=DIR_PAI_NUM[j]) continue;  //Èç¹ûÈ¥µôÒÔºó£¬ÅÆÊýÁ¿¹»ÁË£¬´¦ÀíÏÂÒ»¸¶
+1168  11                                                              }
+1169  10                                                       }
+1170   9                                                }
+1171   8                                                      else if (TableUpE[j][2]<DIR_PAI_NUM[j])  //ÉÙÅÆÇé¿öÏÂ£¬Ö»ÄÜ×îºó²¹Ò»ÕÅ0£¬ÒòÎª²»ÖªµÀÄÄ¸öµØ·½ÉÙµÄ¡£
+1172   8                                                      {
+1173   9                                                                
+1174   9                                                      }
+1175   8                                        }
+1176   7                                      //ÉÙÅÆÇé¿öÏÂ£¬°Ñ¶ªµôµÄÅÆÕÒ³öÀ´£¬²¹ÉÏ¡£
+1177   7                                      /*
+1178   7                                      if ((TableUpE[0][2]<DIR_PAI_NUM[0])||(TableUpE[1][2]<DIR_PAI_NUM[0])
+1179   7                                             ||(TableUpE[2][2]<DIR_PAI_NUM[0])||(TableUpE[3][2]<DIR_PAI_NUM[0]))
+1180   7                                               {
+1181   7                                                 for (n=0x04;n<=0x27;n++)
+1182   7                                                  {
+1183   7                                                       if ((TableUpE[i][j+3])==1)
+1184   7                                                       {
+1185   7                                                       }
+1186   7                                                        }
+1187   7                                               }
+1188   7                                              */
+1189   7                                       //Send_byte(0xf9);
+1190   7                                              for (j=0;j<4;j++)
+1191   7                                              // Send_string(TableUpE[j],40);
+1192   7                                       CombinePaiToOneTable(); //TableUpEÌ¨ÉÏÅÆ×éºÏÅÆµ½TABLE
+1193   7                                              // Send_string(TABLE,255);
+1194   7                                       MAY_START=1;      //¿ÉÒÔ¿ª¾Ö±êÖ¾=1
+1195   7                                       JUST_START=0;     //ÒÑ¾­¿ª¾Ö±êÖ¾=0
+1196   7                                       PaiTypeBak=PaiType[0];
+1197   7                               }
+1198   6                               for (i=2;i<40;i++)       //·ÅÈëTableDnEÏÔÊ¾ÓÃ £¬×÷ÎªÌ¨ÏÂÅÆ¡£µÈµØÏÂÐÂµÄÅÆ¿ªÊ¼×ö¡£·Åµ½Ì¨ÉÏ
+1199   6                                 { 
+1200   7                                   TableDnE[(RfReceive[1]-0xe1)][i]=RfReceive[i+1];  //RfReceive¡¾2¡¿ÊÇÀàÐÍ£¬±¨ÎÄ²»ÐèÒª£¬È¥µô
+1201   7                                 }
+1202   6                         }
+1203   5                       }
+1204   4              }
+1205   3              LED=0;
+1206   3        }
+1207   2              //À¶ÑÀ·¢ËÍ ¶¨Ê±
+1208   2        if (BlueSendCnt>15)
+1209   2          { BlueSendCnt=0;      
+1210   3                //UPDOWNBIT=0;
+1211   3                        order++;
+1212   3                        if (order>11) order=0;
+1213   3           
+1214   3                       if (order<4) 
+1215   3                                   {
+1216   4                                        for (i=0;i<40;i++) BlueSend[i]=TableDnE[order][i];             //·¢ËÍÌ¨ÉÏºÍÌ¨ÏÂÅÆ
+1217   4                                         }
+1218   3                                 else if ((order>=4)&&(order<=7)) 
+1219   3                                   {
+1220   4                                          for (i=0;i<40;i++)   BlueSend[i]=TableUpE[order-4][i];
+1221   4                                       }
+1222   3                               
+1223   3                                  else if (order>7)   //°ÑZhuangPAI[5][20],×ª»¯
+1224   3                                        {
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 21  
+
+1225   4                                         BlueSend[0]=0xfe;
+1226   4                                         BlueSend[1]=order+0xe1;
+1227   4                                         BlueSend[2]=14;
+1228   4                                         for (i=0;i<14;i++) 
+1229   4                                          {
+1230   5                                               BlueSend[i+3]=ZhuangPAI[order-7][i+1]; //´Ó[1][1]¿ªÊ¼
+1231   5                                                }
+1232   4                                        }
+1233   3                      
+1234   3                        checkcrc=crccheck(BlueSend,39);          //CRCÐ£Ñé
+1235   3                        BlueSend[39]=checkcrc/256;     //RfReceive[1]ÊÇE1,E2,E3,E4´ú±í·½Î»
+1236   3                        BlueSend[40]=checkcrc%256;
+1237   3                        //Send_string(TableDnE[(RfReceive[1]-0xe1)],41);
+1238   3                        //Send_string(RfReceive,41);
+1239   3                       // Send_string(BlueSend,11);
+1240   3      //                AUXR1=0x40;
+1241   3                       // delayms(10);
+1242   3                                      
+1243   3                    Send_string2(BlueSend,41);//leng);   //¶Á»ØÀ´ÅÆµÄÖµ        µÚÒ»¸ö×Ö½ÚÊÇ³¤¶È£¬ºóÃæ¶ÔÓ¦µÄÊÇÅÆµÄ±àºÅ
+1244   3                         // Send_string(BlueSend,40);
+1245   3      //                AUXR1=0x00;   
+1246   3                        
+1247   3              }       
+1248   2         
+1249   2        
+1250   2               //test
+1251   2               /*
+1252   2            RfReceive[0]=0xfe;
+1253   2                RfReceive[1]=TxBuf[0];
+1254   2                if (RfReceive[1]==0xe4)
+1255   2                 {
+1256   2                  RfReceive[2]++;
+1257   2                      Line_2A_WTN5(20);
+1258   2                      if (RfReceive[2]>36) RfReceive[2]=1;
+1259   2                 }
+1260   2                checkcrc=crccheck(RfReceive,39);          //CRCÐ£Ñé
+1261   2                RfReceive[39]=checkcrc/256;
+1262   2                RfReceive[40]=checkcrc%256;
+1263   2            Send_string(RfReceive,41);//leng);
+1264   2                */
+1265   2      
+1266   2      
+1267   2                      
+1268   2                      
+1269   2      
+1270   2      
+1271   2      /* 
+1272   2       if(BlueReceiveOk==1)
+1273   2         {
+1274   2              BluePoint=0;
+1275   2              checkcrc=crccheck(BlueReceive,39);          //CRCÐ£Ñé
+1276   2                BlueReceive[39]=checkcrc/256;
+1277   2                BlueReceive[40]=checkcrc%256;
+1278   2              Send_string(BlueReceive,41);
+1279   2              AUXR1=0;
+1280   2              delayms(20);
+1281   2              Send_string(BlueReceive,39);
+1282   2              AUXR1=0X40;
+1283   2              BlueReceiveOk=0;
+1284   2         }
+1285   2         */
+1286   2      }
+C51 COMPILER V8.08   MAIN                                                                  05/12/2017 23:24:37 PAGE 22  
+
+1287   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   6548    ----
+   CONSTANT SIZE    =    512    ----
+   XDATA SIZE       =    945    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     39      42
+   IDATA SIZE       =     93       3
+   BIT SIZE         =      5       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

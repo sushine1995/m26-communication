@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\main-prov51" 
+PRINT(".\Listings\main-prov51.m51") RAMSIZE(256) 
+XDATA( 0X0000-0X06FF )

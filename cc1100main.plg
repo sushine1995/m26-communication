@@ -1,0 +1,266 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+D:\串口麻将机\报牌\报牌系统程序\新主板\主板\cc1100主模块报牌模块 -新主板2017-05-12\cc1100.uv2
+Project File Date:  01/28/2017
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=1085 code=8570
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=8406
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=8406
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=8406
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=8406
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7126
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7138
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7141
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7141
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7141
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7141
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'k': unreferenced local variable
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'n': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7141
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7599
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 5 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+MAIN.C(588): warning C280: 'm': unreferenced local variable
+MAIN.C(588): warning C280: 'repeat': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7599
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 5 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=8420
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=925 code=7974
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=945 code=7972
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=945 code=7975
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=945 code=8000
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=945 code=8001
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(588): warning C280: 'f': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEND_STRING?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SETRXMODE?MAIN
+Program Size: data=177.6 xdata=945 code=7975
+creating hex file from "cc1100main"...
+"cc1100main" - 0 Error(s), 3 Warning(s).
